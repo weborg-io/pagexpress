@@ -1,0 +1,60 @@
+{
+  "pageType": "default",
+  "attributesSchema": [
+    {
+      "_id": "5e9f4e61aaafe3204524d886",
+      "name": "partner",
+      "description": "Partner site name",
+      "type": "text"
+    },
+    {
+      "_id": "5e9f4e61aaafe3204524d887",
+      "name": "preloadedImages",
+      "description": "Images that will be preloaded before all others",
+      "type": "list"
+    },
+    {
+      "_id": "5e9f4e61aaafe3204524d888",
+      "name": "cssFiles",
+      "description": "Array css files paths",
+      "type": "list"
+    },
+    {
+      "_id": "5e9f4e61aaafe3204524d889",
+      "name": "jsModules",
+      "description": "Array JS files paths",
+      "type": "list"
+    }
+  ],
+  "data": {
+    "pageDetails": [
+      {
+        "name": "US default",
+        "_id": "5ef5a829e5c98f9207dcc409",
+        "country": "5ecd6d0fb7bed40d875d9ca4",
+        "title": "New awesome page 2 in USA",
+        "description": "New awesome page 2 in USA"
+      }
+    ],
+    "_id": "5ecd664cd513932f96b96fc2",
+    "url": "/sample/new-awesome-page/",
+    "name": "New awesome page 2",
+    "type": {
+      "_id": "5e9f4dab8337b214ed144be0",
+      "name": "default"
+    },
+    "attributes": {
+      "partner": "QQQ company org",
+      "cssFiles": [
+        "/css/main.css"
+      ],
+      "jsModules": [
+        "/js/main.js"
+      ],
+      "preloadedImages": [
+        "/images/hero.jpg",
+        "/images/asdf.png"
+      ]
+    }
+  }
+}
