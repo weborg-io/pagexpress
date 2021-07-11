@@ -6,7 +6,7 @@ import {
   FieldModelSchema,
   FieldOptionModelSchema,
   FieldsetModelSchema,
-} from '../../server/models/data-schemas';
+} from '@pagexpress/server-api/models/data-schemas';
 import { reorderItems, showRequestResult } from '@/utils';
 
 const FIELD_ATTRIBUTES = ['min', 'max', 'required', 'default'];
@@ -48,9 +48,9 @@ export const getters = {
     for (const [fieldName, fieldAttributes] of Object.entries(
       state.modelSchemas[schemaName]
     )) {
-      const filteredAttributesKeys = Object.keys(
-        fieldAttributes
-      ).filter(attributeKey => FIELD_ATTRIBUTES.includes(attributeKey));
+      const filteredAttributesKeys = Object.keys(fieldAttributes).filter(
+        attributeKey => FIELD_ATTRIBUTES.includes(attributeKey)
+      );
 
       attributes[fieldName] = {};
 
