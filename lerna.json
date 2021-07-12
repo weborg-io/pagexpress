@@ -4,12 +4,15 @@
       "npmClient": "yarn"
     },
     "publish": {
-      "ignoreChanges": ["ignored-file", "*.md"],
+      "ignoreChanges": [
+        "ignored-file",
+        "*.md"
+      ],
       "message": "chore(release): publish"
     }
   },
   "packages": [
     "packages/*"
   ],
-  "version": "0.9.0"
+  "version": "0.9.1-alpha.0"
 }
