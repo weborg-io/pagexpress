@@ -11,6 +11,9 @@ if (!config.get('jwtPrivateKey')) {
   process.exit();
 }
 
-const serverApi = new ServerApi(config);
+const serverApi = new ServerApi({
+  mongodb: config.get('mongodb'),
+  server: config.get('server'),
+});
 
 serverApi.run();

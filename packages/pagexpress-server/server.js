@@ -3,9 +3,16 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const errorHandler = require('./middlewares/error-handler');
 
-class PagexpressServer {
+/**
+ * @typedef ServerConfig
+ *
+ * @property {string} object
+ * @property {string} server
+ */
+
+class Server {
   /**
-   * @param {object} config - config module instance with server settings
+   * @param {ServerConfig} config
    */
   constructor(config) {
     this.config = config;
@@ -22,7 +29,7 @@ class PagexpressServer {
   }
 
   initDb() {
-    require('./db/db-connect')(this.config.get('mongodb'));
+    require('./db/db-connect')(this.config.mongodb);
   }
 
   initRouting() {
@@ -36,10 +43,10 @@ class PagexpressServer {
   }
 
   run() {
-    const serverConfig = this.config.get('server');
-    this.app.listen(serverConfig.port, serverConfig.host);
-    console.log(`App listening at ${serverConfig.host}:${serverConfig.port}`);
+    const { port, host } = this.config.server;
+    this.app.listen(port, host);
+    console.log(`App listening at ${host}:${port}`);
   }
 }
 
-module.exports = PagexpressServer;
+module.exports = Server;

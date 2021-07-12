@@ -6,7 +6,7 @@ import {
   FieldModelSchema,
   FieldOptionModelSchema,
   FieldsetModelSchema,
-} from '@pagexpress/server-api/models/data-schemas';
+} from '@pagexpress/pagexpress-server/models/data-schemas';
 import { reorderItems, showRequestResult } from '@/utils';
 
 const FIELD_ATTRIBUTES = ['min', 'max', 'required', 'default'];
