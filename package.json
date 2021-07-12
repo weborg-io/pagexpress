@@ -1,4 +1,5 @@
 {
+  "private": "true",
   "name": "@pagexpress/pagexpress",
   "version": "0.9.0",
   "description": "Open Source NodeJS headless CMS",
