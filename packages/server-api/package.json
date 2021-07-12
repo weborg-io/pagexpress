@@ -37,5 +37,9 @@
     "jest": "^25.3.0",
     "nodemon": "^2.0.2",
     "prettier": "^2.3.0"
+  },
+  "gitHead": "4885d90e190accdbdcef419280e4ba3d1b79b945",
+  "publishConfig": {
+    "access": "public"
   }
 }
