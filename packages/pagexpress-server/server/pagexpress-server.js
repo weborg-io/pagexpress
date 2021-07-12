@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const errorHandler = require('./middlewares/error-handler');
 
-class ServerApi {
+class PagexpressServer {
   /**
    * @param {object} config - config module instance with server settings
    */
@@ -42,4 +42,4 @@ class ServerApi {
   }
 }
 
-module.exports = ServerApi;
+module.exports = PagexpressServer;

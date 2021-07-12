@@ -1,6 +1,6 @@
 const path = require('path');
-const ServerApi = require('./server-api');
-const rootPath = path.join(__dirname, '../../');
+const ServerApi = require('@pagexpress/pagexpress-server');
+const rootPath = path.join(__dirname, '../');
 require('dotenv').config({ path: `${rootPath}.env` });
 
 const config = require('config');
