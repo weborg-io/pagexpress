@@ -10,12 +10,13 @@ yarn add @pagexpress/pagexpress-server
 ```
 
 Setup config using [config module](https://www.npmjs.com/package/config)
-Create `config` module in the root directory of your app. Create `default.json` file with value
+Create `config` directory in the root directory of your app. Add there `default.json` file with value
 ```
 {
   "pxSecret": "yourSecretKey"
 }
 ```
+
 To make it safe use `custom-environment-variables.json` file to override defulat one
 ```
 {
