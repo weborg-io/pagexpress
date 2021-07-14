@@ -1,5 +1,5 @@
 {
-  "jwtPrivateKey": "PAGEXPRESS_JWT_PRIVATE_KEY",
+  "pxSecret": "PAGEXPRESS_JWT_PRIVATE_KEY",
   "mongodb": {
     "host": "DB_HOST",
     "port": "DB_PORT",

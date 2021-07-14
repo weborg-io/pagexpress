@@ -21,7 +21,7 @@ const auth = (req, res, next) => {
   }
 
   try {
-    res.user = jwt.verify(token, config.get('jwtPrivateKey'));
+    res.user = jwt.verify(token, config.get('pxSecret'));
     next();
   } catch (err) {
     return res.status(401).json({

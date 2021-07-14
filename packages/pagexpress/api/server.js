@@ -5,8 +5,8 @@ require('dotenv').config({ path: `${rootPath}.env` });
 
 const config = require('config');
 
-if (!config.get('jwtPrivateKey')) {
-  console.log('FATAL ERROR: jwtPrivateKey is not defined');
+if (!config.get('pxSecret')) {
+  console.log('FATAL ERROR: pxSecret is not defined');
 
   process.exit();
 }

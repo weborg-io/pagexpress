@@ -1,5 +1,5 @@
 {
-  "jwtPrivateKey": "",
+  "pxSecret": "",
   "mongodb": {
     "host": "",
     "port": "",

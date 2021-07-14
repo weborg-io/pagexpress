@@ -1,7 +1,10 @@
-## Pagexpress
-### Build page in the same way as building constructions from Lego 🧱
-Application allows creating JSON with page structure which could be used the sam offline as online as a headless CMS. 
-Project built on NodeJS + VueJS tech-stack.
+# Pagexpress
+
+### Fast, fully customizable headless CMS
+Fullstack JS stack with NodeJS on backend and NuxtJS on the front. Simple to use and customize, with intuitive REST API.
+Admin panel allows to create components, pages, menu, all the rest available from the API.
+
+## Get Started
 
 ### .env file config
 Specify environment variables in .env file located in root directory. Example config
@@ -9,7 +12,7 @@ Specify environment variables in .env file located in root directory. Example co
 DB_HOST=0.0.0.0
 DB_PORT=27017
 DB_USER=root
-DB_PASS=root           
+DB_PASS=root
 APP_PORT=4000
 API_URL=http://127.0.0.1:4000/v1
 PAGEXPRESS_JWT_PRIVATE_KEY=mysecretword
@@ -17,20 +20,28 @@ PAGEXPRESS_JWT_PRIVATE_KEY=mysecretword
 
 ### Run
 Docker mongodb image
-```shell script
+```shell
 docker-compose up
 ```
 
-Nodejs server
-```shell script
-cd server
-npm i
-npm run dev
+Server API in dev mode with nodemon
+```shell
+yarn api:dev
 ```
 
-Client server
-```shell script
-cd client
-npm i
-npm run dev
+Server API for production
+```shell
+yarn api:prod
 ```
+
+Run pagexpress in dev mode
+```shell
+yarn dev
+```
+
+For production
+```shell
+yarn build
+yarn start
+```
+
