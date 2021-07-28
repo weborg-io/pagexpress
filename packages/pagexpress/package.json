@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
+    "build:start": "nuxt build && nuxt start",
+    "generate:start": "nuxt generate && nuxt start",
     "start": "nuxt start",
-    "api:dev": "NODE_PATH=. nodemon ./api/server.js",
+    "api:dev": "NODE_PATH=. node_modules/.bin/nodemon ./api/server.js",
     "api:prod": "NODE_PATH=. NODE_ENV=production node ./api/server.js",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",

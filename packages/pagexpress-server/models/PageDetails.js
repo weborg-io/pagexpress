@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 const uuid = require('uuid');
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
 const pageComponentSchema = new Schema({

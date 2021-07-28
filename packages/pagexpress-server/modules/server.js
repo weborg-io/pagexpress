@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const errorHandler = require('./middlewares/error-handler');
+const errorHandler = require('../middlewares/error-handler');
 
 /**
  * @typedef ServerConfig
@@ -29,11 +29,11 @@ class Server {
   }
 
   initDb() {
-    require('./db/db-connect')(this.config.mongodb);
+    require('../db/db-connect')(this.config.mongodb);
   }
 
   initRouting() {
-    require('./routes')(this.app);
+    require('../routes')(this.app);
   }
 
   init() {

@@ -1,6 +1,6 @@
 const { FieldModelSchema, fieldValidationSchema } = require('./field-model-schema');
 const { FieldsetModelSchema, fieldsetValidationSchema } = require('./fieldset-model-schema');
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 
 const ComponentPatternModelSchema = ({ fieldSchema, fieldsetSchema } = {}) => ({
   name: { type: String, require: true, unique: true, min: 3, max: 30 },

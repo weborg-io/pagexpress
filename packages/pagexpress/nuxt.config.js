@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 export default {
-  mode: 'universal',
+  ssr: false,
   /*
    ** Headers of the page
    */
@@ -39,6 +39,7 @@ export default {
   plugins: [{ src: '~plugins/quill-plugin', ssr: false }],
   router: {
     middleware: ['auth', 'prevent-leaving'],
+    base: process.env.NUXT_BASE_PATH,
   },
   /*
    ** Nuxt.js dev-modules
@@ -100,7 +101,7 @@ export default {
       local: {
         endpoints: {
           login: { url: 'auth', method: 'post', propertyName: 'token' },
-          user: { url: 'users/me', method: 'get', propertyName: false },
+          user: { url: 'users/me', method: 'get', propertyName: 'username' },
           logout: false,
         },
       },
