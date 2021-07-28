@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const roles = require('../roles/roles');
@@ -24,7 +24,7 @@ userSchema.methods.generateAuthToken = function () {
       username: this.username,
       role: this.role,
     },
-    config.get('jwtPrivateKey')
+    config.get('pxSecret')
   );
 };
 

@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 
 const siteInfo = new Schema({
   url: { type: String, require: true, max: 250 },
