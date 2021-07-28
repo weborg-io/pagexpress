@@ -1,5 +1,5 @@
 const path = require('path');
-const ServerApi = require('@pagexpress/pagexpress-server');
+const { Server } = require('@pagexpress/pagexpress-server');
 const rootPath = path.join(__dirname, '../');
 require('dotenv').config({ path: `${rootPath}.env` });
 
@@ -11,9 +11,9 @@ if (!config.get('pxSecret')) {
   process.exit();
 }
 
-const serverApi = new ServerApi({
+const server = new Server({
   mongodb: config.get('mongodb'),
   server: config.get('server'),
 });
 
-serverApi.run();
+server.run();
