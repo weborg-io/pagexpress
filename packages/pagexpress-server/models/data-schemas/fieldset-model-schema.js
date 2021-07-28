@@ -1,5 +1,5 @@
 const { FieldModelSchema, fieldValidationSchema } = require('./field-model-schema');
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 
 const FieldsetModelSchema = ({ fieldSchema } = {}) => ({
   name: { type: String, require: true, min: 3, max: 30 },

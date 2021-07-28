@@ -1,5 +1,5 @@
 const { Schema } = require('mongoose');
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
 const FieldOptionModelSchema = () => ({
