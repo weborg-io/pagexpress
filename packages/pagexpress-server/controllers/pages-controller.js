@@ -22,8 +22,12 @@ const getPages = async (req, res, next) => {
       }
 
       const { type } = singlePage.toObject();
-      const pageType = await PageType.findById(type).populate('attributes.type').exec();
+      const pageType = await PageType.findById(type).populate({
+        path: 'attributes',
+        select: 'type',
+      }).exec();
       const pageTypeData = pageType.toObject();
+      console.log('****', pageTypeData.attributes);
       const pageTypeAttributesSchema = pageTypeData.attributes.map(attribute => ({
         ...attribute,
         type: attribute.type.type,
