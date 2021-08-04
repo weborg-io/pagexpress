@@ -1,6 +1,6 @@
 {
   "name": "@pagexpress/pagexpress-server",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "description": "Open Source NodeJS headless CMS API server",
   "main": "modules/index.js",
   "scripts": {
