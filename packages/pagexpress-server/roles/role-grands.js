@@ -21,6 +21,7 @@ const roleGrands = () => {
 
   ac.grant(REDACTOR)
     .readOwn('user')
+    .readAny('componentPattern')
     .readAny('pageType')
     .readAny('fieldType')
     .readAny('field')
@@ -45,7 +46,6 @@ const roleGrands = () => {
     .createAny('menu')
     .deleteAny('menu')
     .createAny('componentPattern')
-    .readAny('componentPattern')
     .updateAny('componentPattern')
     .deleteAny('componentPattern');
 
