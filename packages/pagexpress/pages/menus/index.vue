@@ -49,6 +49,13 @@
         </div>
         <div class="column buttons right-buttons">
           <button
+            class="button is-info"
+            :disabled="!activeMenuId"
+            @click="publishMenu(activeMenuId)"
+          >
+            Publish
+          </button>
+          <button
             class="button is-success"
             :disabled="!unsavedMenuChanges"
             @click="saveChanges"
@@ -62,9 +69,7 @@
       <div class="columns">
         <div class="column is-one-third">
           <div class="panel is-info">
-            <p class="panel-heading">
-              Add new menu item
-            </p>
+            <p class="panel-heading">Add new menu item</p>
             <div class="panel-block add-menu-item">
               <div class="control">
                 <vue-autosuggest
@@ -250,6 +255,7 @@ export default {
   methods: {
     ...mapActions({
       fetchMenus: 'menus/fetchMenus',
+      publishMenu: 'menus/publishMenu',
       fetchPages: 'pages/loadPages',
       removeMenu: 'menus/removeMenu',
     }),
