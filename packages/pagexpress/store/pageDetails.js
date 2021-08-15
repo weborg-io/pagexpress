@@ -73,6 +73,16 @@ export const mutations = {
     });
   },
 
+  UPDATE_COMPONENT_LABEL(state, { componentId, label }) {
+    state.components = state.components.map(component => {
+      if (component._id === componentId) {
+        component.treeNodeLabel = label;
+      }
+
+      return component;
+    });
+  },
+
   REMOVE_COMPONENT(state, componentId) {
     const nodeWithDescendants = getAllDescendants(
       componentId,
@@ -283,6 +293,12 @@ export const actions = {
       }),
       componentData: { ...payload, parentComponentId },
     });
+
+    dispatch('setDirtyState', null, { root: true });
+  },
+
+  renameComponent({ commit, dispatch }, renameParams) {
+    commit('UPDATE_COMPONENT_LABEL', renameParams);
 
     dispatch('setDirtyState', null, { root: true });
   },
