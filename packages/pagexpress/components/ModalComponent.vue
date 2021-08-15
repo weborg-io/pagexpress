@@ -18,6 +18,7 @@
           <PageComponentData
             :fields="componentPattern.fields"
             :component-name="componentPattern.name"
+            :node-label="component.treeNodeLabel"
             :data="component.data"
             :on-update-data="updateData"
           />
