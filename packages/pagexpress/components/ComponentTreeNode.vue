@@ -31,7 +31,7 @@
             Rename
           </button>
         </div>
-        <div v-if="showRenameNodeForm" class="tree-node__label">
+        <div v-if="showRenameNodeForm" class="tree-node__rename-form">
           <input v-model="label" type="text" class="input" />
           <button class="button is-success is-small" @click="renameSelf">
             Save
@@ -549,6 +549,12 @@ export default {
     align-items: center;
     font-weight: 600;
     font-size: var(--font-small);
+  }
+
+  &__rename-form {
+    .input {
+      margin-bottom: var(--spacing);
+    }
   }
 }
 </style>
