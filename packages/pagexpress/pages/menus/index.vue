@@ -245,6 +245,7 @@ export default {
   },
 
   async mounted() {
+    await this.fetchSiteInfo();
     await this.fetchMenus();
     await this.fetchPages();
 
@@ -257,6 +258,7 @@ export default {
       fetchMenus: 'menus/fetchMenus',
       publishMenu: 'menus/publishMenu',
       fetchPages: 'pages/loadPages',
+      fetchSiteInfo: 'fetchSiteInfo',
       removeMenu: 'menus/removeMenu',
     }),
 
