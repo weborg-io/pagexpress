@@ -51,7 +51,7 @@
           <button
             class="button is-info"
             :disabled="!activeMenuId"
-            @click="publishMenu(activeMenuId)"
+            @click="publishMenu"
           >
             Publish
           </button>
