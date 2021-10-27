@@ -44,25 +44,34 @@
       :value="value || undefined"
       @update="update"
     />
+
+    <FieldDateTime
+      v-if="fieldType === 'datetime'"
+      :label="label"
+      :value="value || undefined"
+      @update="update"
+    />
   </div>
 </template>
 
 <script>
 import {
   FieldBoolean,
+  FieldClientImage,
+  FieldDateTime,
   FieldHeader,
   FieldHtml,
   FieldList,
   FieldText,
-  FieldClientImage,
 } from './FieldTypes';
 
 export default {
   name: 'Field',
 
   components: {
-    FieldClientImage,
     FieldBoolean,
+    FieldClientImage,
+    FieldDateTime,
     FieldHeader,
     FieldHtml,
     FieldList,
