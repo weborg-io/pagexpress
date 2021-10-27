@@ -13,7 +13,7 @@ const getPageStructure = async (req, res, next) => {
       .populate({
         path: 'pageDetails',
         model: 'PageDetails',
-        select: 'name country default title description components',
+        select: 'name country default title description components createdAt updatedAt',
         populate: {
           path: 'country',
           select: 'name code language -_id',
@@ -43,7 +43,7 @@ const getPageStructure = async (req, res, next) => {
       ...R.pick(['attributes', 'name', 'url', 'type'], fullPageData),
       variants: pageVariants.map(variant => {
         return {
-          ...R.pick(['name', 'country', 'title', 'description'], variant),
+          ...R.pick(['name', 'country', 'title', 'description', 'createdAt', 'updatedAt'], variant),
           components: variant.components.map(({ name, data, components }) => ({ name, data, components })),
         };
       }),

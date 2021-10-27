@@ -31,7 +31,8 @@
     "vue-autosuggest": "^2.2.0",
     "vue-quill-editor": "^3.0.6",
     "vue-smooth-dnd": "0.8.1",
-    "vuedraggable": "^2.24.2"
+    "vuedraggable": "^2.24.2",
+    "vuejs-datepicker": "^1.6.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^5.0.0",
