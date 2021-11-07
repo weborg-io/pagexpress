@@ -1,5 +1,5 @@
 {
-  "name": "@pagexpress/pagexpress-server",
+  "name": "@weborg-io/pagexpress-server",
   "version": "0.10.3",
   "description": "Open Source NodeJS headless CMS API server",
   "main": "modules/index.js",
@@ -39,7 +39,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/pagexpress/pagexpress.git"
+    "url": "git://github.com/weborg-io/pagexpress.git"
   },
   "gitHead": "4885d90e190accdbdcef419280e4ba3d1b79b945",
   "publishConfig": {
