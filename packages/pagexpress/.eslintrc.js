@@ -16,6 +16,13 @@ module.exports = {
   plugins: ['prettier'],
   // add your custom rules here
   rules: {
+    'max-len': [
+      'error',
+      {
+        code: 80,
+        comments: 120,
+      },
+    ],
     'vue/html-self-closing': [
       'error',
       {
