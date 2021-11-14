@@ -2,13 +2,13 @@
   <div class="toolbar">
     <div class="container toolbar__inner">
       <div class="toolbar__left-side">
-        <slot name="left" />
+        <slot name="left"></slot>
       </div>
       <div class="toolbar__middle">
-        <slot name="middle" />
+        <slot name="middle"></slot>
       </div>
       <div class="toolbar__right-side">
-        <slot name="right" />
+        <slot name="right"></slot>
       </div>
     </div>
   </div>
@@ -40,6 +40,7 @@ export default {
   &__middle,
   &__left-side {
     display: flex;
+    flex: 1;
 
     & > * {
       margin-right: var(--spacing-05);
@@ -50,9 +51,13 @@ export default {
     }
   }
 
+  &__right-side {
+    justify-content: flex-end;
+  }
+
   &__middle {
-    flex: 1 0 0;
     padding: 0 var(--spacing-2);
+    justify-content: center;
   }
 }
 </style>

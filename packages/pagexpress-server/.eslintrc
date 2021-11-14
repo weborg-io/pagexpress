@@ -15,6 +15,13 @@
     "sourceType": "module"
   },
   "rules": {
+    "max-len": [
+      "error",
+      {
+        "code": 80,
+        "comments": 120
+      }
+    ],
     "func-style": ["warn", "expression"],
     "linebreak-style": ["error", "unix"],
     "no-array-constructor": ["error"],

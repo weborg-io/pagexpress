@@ -99,6 +99,19 @@ export default {
     },
   },
 
+  watch: {
+    /**
+     * @param {bool} value
+     */
+    visible(value) {
+      if (value === true) {
+        window.addEventListener('keyup', this.closeOnEscapePress);
+      } else {
+        window.removeEventListener('keyup', this.closeOnEscapePress);
+      }
+    },
+  },
+
   methods: {
     updateData(fieldName, value) {
       this.updateComponent({
@@ -113,6 +126,15 @@ export default {
     saveAndClose() {
       this.save();
       this.toggleVisibility();
+    },
+
+    /**
+     * @param {MouseEvent} evt
+     */
+    closeOnEscapePress(evt) {
+      if (evt.key === 'Escape') {
+        this.toggleVisibility();
+      }
     },
   },
 };

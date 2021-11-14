@@ -7,6 +7,7 @@ const roleGrands = () => {
     .readOwn('user')
     .readAny('pageType')
     .readAny('fieldType')
+    .readAny('stats')
     .readAny('field')
     .readAny('definition')
     .readAny('country')
@@ -21,6 +22,7 @@ const roleGrands = () => {
 
   ac.grant(REDACTOR)
     .readOwn('user')
+    .readAny('stats')
     .readAny('componentPattern')
     .readAny('pageType')
     .readAny('fieldType')
