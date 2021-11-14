@@ -1,6 +1,8 @@
+const { Page } = require('../models/Page');
 const { PageDetails } = require('../models/PageDetails');
 const { ComponentPattern } = require('../models/ComponentPattern');
 const R = require('ramda');
+const { ObjectId } = require('mongoose').Types;
 
 const componentUsage = async (req, res, next) => {
   const { componentName } = req.params;
@@ -10,18 +12,33 @@ const componentUsage = async (req, res, next) => {
       name: componentName,
     }).exec();
 
-    const pageDetails = await PageDetails.find({}).exec();
-    const pagesDetailsWithTargetComponent = pageDetails
-      .filter(singlePageDetails =>
-        singlePageDetails.components.some(
-          component =>
-            component.componentPatternId.toString() ===
-            targetComponent._id.toString()
-        )
-      )
-      .map(singlePageDetails => singlePageDetails.pageId);
+    const pageDetailsWithTargetComponent = await PageDetails.find({
+      'components.componentPatternId': { $eq: ObjectId(targetComponent._id) },
+    }).exec();
+    const pages = await Page.find({
+      _id: {
+        $in: R.uniq(
+          pageDetailsWithTargetComponent.map(singlePageDetails =>
+            singlePageDetails.pageId.toString()
+          )
+        ),
+      },
+    });
 
-    res.json({ pages: R.uniq(pagesDetailsWithTargetComponent) });
+    res.json(
+      pages.map(({ name, url, _id }) => ({
+        name,
+        url,
+        pageId: _id,
+        details: pageDetailsWithTargetComponent
+          .filter(
+            pageDetails => pageDetails.pageId.toString() === _id.toString()
+          )
+          .map(pageDetails =>
+            R.pick(['_id', 'name', 'title', 'description'], pageDetails)
+          ),
+      }))
+    );
   } catch (err) {
     next(err);
   }
