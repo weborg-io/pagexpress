@@ -1,19 +1,14 @@
 const { Page } = require('../models/Page');
 const { PageDetails } = require('../models/PageDetails');
-const { ComponentPattern } = require('../models/ComponentPattern');
 const R = require('ramda');
 const { ObjectId } = require('mongoose').Types;
 
 const componentUsage = async (req, res, next) => {
-  const { componentName } = req.params;
+  const { componentId } = req.params;
 
   try {
-    const targetComponent = await ComponentPattern.findOne({
-      name: componentName,
-    }).exec();
-
     const pageDetailsWithTargetComponent = await PageDetails.find({
-      'components.componentPatternId': { $eq: ObjectId(targetComponent._id) },
+      'components.componentPatternId': { $eq: ObjectId(componentId) },
     }).exec();
     const pages = await Page.find({
       _id: {
