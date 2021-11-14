@@ -1,8 +1,17 @@
 const AccessControl = require('accesscontrol');
 const ac = new AccessControl();
-const { REDACTOR, EDITOR, DEV, ADMIN } = require('./roles');
+const {
+  API_CONSUMER,
+  REDACTOR,
+  EDITOR,
+  DEV,
+  DEV_JUNIOR,
+  ADMIN,
+} = require('./roles');
 
 const roleGrands = () => {
+  ac.grant(API_CONSUMER).readAny('pageDetails').readAny('menu');
+
   ac.grant(EDITOR)
     .readOwn('user')
     .readAny('pageType')
@@ -42,6 +51,8 @@ const roleGrands = () => {
     .deleteAny('pageDetails')
     .readAny('menu')
     .updateAny('menu');
+
+  ac.grant(DEV_JUNIOR).extend(REDACTOR);
 
   ac.grant(DEV)
     .extend(REDACTOR)
