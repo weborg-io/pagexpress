@@ -17,6 +17,7 @@ const detailsStructure = {
 };
 
 export const state = () => ({
+  version: 0,
   details: { ...detailsStructure },
   components: [],
   isDirty: false,
@@ -29,6 +30,7 @@ export const getters = {
 
 export const mutations = {
   FETCH_PAGE_DETAILS(state, { components, ...details }) {
+    state.version = details.version;
     state.components = components;
     state.details = _.pick(details, [
       '_id',
@@ -150,6 +152,7 @@ export const actions = {
       request: this.$axios.put(`page-details/${state.details._id}`, {
         ..._.pickBy(state.details, (value, key) => key !== '_id'),
         components,
+        version: state.version,
       }),
       dispatch,
     });

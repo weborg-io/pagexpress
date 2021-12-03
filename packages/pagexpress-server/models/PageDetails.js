@@ -24,6 +24,8 @@ const pageDetailsSchema = new Schema(
   },
   {
     timestamps: true,
+    optimisticConcurrency: true,
+    versionKey: 'version',
   }
 );
 

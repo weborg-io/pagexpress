@@ -23,7 +23,6 @@ class Server {
     const app = express();
     app.use(bodyParser.json());
     app.use(cors());
-    app.use(errorHandler);
 
     this.app = app;
   }
@@ -36,10 +35,15 @@ class Server {
     require('../routes')(this.app);
   }
 
+  initErrorHandler() {
+    this.app.use(errorHandler);
+  }
+
   init() {
     this.initExpressServer();
     this.initDb();
     this.initRouting();
+    this.initErrorHandler();
   }
 
   run() {
