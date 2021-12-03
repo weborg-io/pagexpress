@@ -3,9 +3,6 @@ const Server = require('./server');
 
 class ServerConnector {
   constructor({ envFilePath } = {}) {
-    require('dotenv').config({
-      path: envFilePath || this.getDefaultEnvFilePath(),
-    });
     this.config = this.getConfig();
   }
 

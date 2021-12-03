@@ -1,7 +1,3 @@
-const path = require('path');
-const rootPath = path.join(__dirname, '../');
-require('dotenv').config({ path: `${rootPath}.env` });
-
 const configModule = require('config');
 const { host, port, collection, user, password } = configModule.get('mongodb');
 

@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 export default {
   ssr: false,
   /*
@@ -84,8 +82,6 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     '@nuxtjs/pwa',
-    // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv',
   ],
   axios: {
     baseURL: process.env.API_URL,
