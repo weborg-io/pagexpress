@@ -77,7 +77,8 @@ const createPageDetails = async (req, res, next) => {
 };
 
 const updatePageDetails = async (req, res, next) => {
-  const { error } = pageDetailsValidationSchema.validate(req.body);
+  const { version, ...requestData } = req.body;
+  const { error } = pageDetailsValidationSchema.validate(requestData);
   const { pageDetailsId } = req.params;
 
   try {
@@ -85,17 +86,24 @@ const updatePageDetails = async (req, res, next) => {
       throw new BadRequest(error.details[0].message);
     }
 
-    const uniqueComponents = hasComponentsUniqueIds(req.body.components);
+    const uniqueComponents = hasComponentsUniqueIds(requestData.components);
 
     if (!uniqueComponents) {
       throw new BadRequest('Component Id is not unique');
     }
 
-    if (req.body.default === true) {
-      await PageDetails.updateMany({ pageId: req.body.pageId }, { default: false });
+    if (requestData.default === true) {
+      await PageDetails.updateMany({ pageId: requestData.pageId }, { default: false });
     }
 
-    const pageDetails = await PageDetails.findOneAndUpdate({ _id: pageDetailsId }, req.body);
+    const pageDetails = await PageDetails.findById(pageDetailsId);
+
+    if (!version || version !== pageDetails.version) {
+      throw new BadRequest('Version is not recent one, please update page data and try again');
+    }
+
+    pageDetails.overwrite(requestData);
+    await pageDetails.save();
     res.json(pageDetails);
   } catch (err) {
     next(err);
