@@ -11,6 +11,7 @@ const pageTemplates = require('./page-templates-routes');
 const pageTypes = require('./page-types-routes');
 const pages = require('./pages-routes');
 const siteInfo = require('./site-info-routes');
+const stats = require('./stats-routes');
 const users = require('./users-routes');
 
 module.exports = app => {
@@ -27,5 +28,6 @@ module.exports = app => {
   app.use('/v1', pageTypes);
   app.use('/v1', pages);
   app.use('/v1', siteInfo);
+  app.use('/v1', stats);
   app.use('/v1', users);
 };

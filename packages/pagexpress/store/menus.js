@@ -166,4 +166,16 @@ export const actions = {
 
     commit('REMOVE_MENU', removedMenuId);
   },
+
+  async publishMenu({ dispatch, rootState }) {
+    if (!confirm('Please confirm publishing menu')) {
+      return;
+    }
+
+    await showRequestResult({
+      request: this.$axios.post(rootState.siteInfo.menuUpdateWebhookUrl),
+      dispatch,
+      successMessage: 'Menu has been published',
+    });
+  },
 };

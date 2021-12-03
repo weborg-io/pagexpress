@@ -1,17 +1,27 @@
 <template>
   <div class="component-add">
     <Toolbar>
-      <template v-slot:left>
-        <button class="button is-info" @click="addField">
-          Add field +
-        </button>
+      <template #left>
+        <button class="button is-info" @click="addField">Add field +</button>
 
         <button class="button is-info" @click="addFieldset">
           Add fieldset +
         </button>
       </template>
 
-      <template v-if="unsavedState" v-slot:right>
+      <template #middle>
+        <button
+          class="button is-outlined"
+          @click="toggleComponentUsageVisibility"
+        >
+          <span>Check usage</span>
+          <span class="icon">
+            <fa :icon="['fas', 'eye']" />
+          </span>
+        </button>
+      </template>
+
+      <template v-if="unsavedState" #right>
         <button
           class="button is-success"
           @click="updateComponentPattern({ componentId })"
@@ -20,6 +30,38 @@
         </button>
       </template>
     </Toolbar>
+
+    <Modal
+      :toggle-visibility="toggleComponentUsageVisibility"
+      :visible="comopnentUsageVisible"
+    >
+      <table
+        v-if="componentUsage && componentUsage.length"
+        class="table is-fullwidth is-striped"
+      >
+        <thead>
+          <tr>
+            <th>Page name</th>
+            <th>URL</th>
+            <th>Variant name</th>
+          </tr>
+        </thead>
+        <tbody v-for="page of componentUsage" :key="page.pageId">
+          <tr v-for="pageDetails of page.details" :key="pageDetails._id">
+            <td>{{ page.name }}</td>
+            <td>{{ page.url }}</td>
+            <td>
+              <nuxt-link
+                :to="`/pages/${page.pageId}/structure/${pageDetails._id}`"
+              >
+                {{ pageDetails.name }}
+              </nuxt-link>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </Modal>
+
     <Panel title="Main parameters">
       <Form
         :form-schema="formMainParameters"
@@ -149,7 +191,7 @@
 <script>
 import { Draggable, Container } from 'vue-smooth-dnd';
 import { mapGetters, mapState, mapActions } from 'vuex';
-import { Form, Panel, DraggableForm, Toolbar } from '@/components';
+import { DraggableForm, Form, Modal, Panel, Toolbar } from '@/components';
 
 export default {
   components: {
@@ -157,12 +199,14 @@ export default {
     Draggable,
     DraggableForm,
     Form,
+    Modal,
     Panel,
     Toolbar,
   },
 
   data() {
     return {
+      comopnentUsageVisible: false,
       fieldset: [
         {
           fields: [{}],
@@ -183,6 +227,7 @@ export default {
       'formFieldset',
       'randomId',
     ]),
+
     ...mapState('componentPatterns', [
       'componentPatternMainData',
       'componentPatternFields',
@@ -190,6 +235,12 @@ export default {
       'fieldTypes',
       'unsavedState',
     ]),
+
+    ...mapState({
+      componentUsage(state) {
+        return state.stats.componentsUsage[this.$route.params.componentId];
+      },
+    }),
 
     componentId() {
       return this.$route.params.componentId;
@@ -202,6 +253,7 @@ export default {
     this.fetchSingleComponentPattern({
       componentId: this.$route.params.componentId,
     });
+    this.fetchComponentUsage(this.$route.params.componentId);
     this.setBreadcrumbsLinks();
   },
 
@@ -220,6 +272,7 @@ export default {
       'reorderFieldsetFields',
       'resetState',
     ]),
+    ...mapActions('stats', ['fetchComponentUsage']),
 
     updateMainParameters(fieldName, value) {
       this.$store.dispatch(
@@ -278,6 +331,10 @@ export default {
 
     onFieldsetFieldDrop(fieldsetIndex, dropResult) {
       this.reorderFieldsetFields({ fieldsetIndex, dropResult });
+    },
+
+    toggleComponentUsageVisibility() {
+      this.comopnentUsageVisible = !this.comopnentUsageVisible;
     },
   },
 };

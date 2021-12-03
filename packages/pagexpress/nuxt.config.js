@@ -66,6 +66,7 @@ export default {
               'faClone',
               'faSearch',
               'faTimes',
+              'faEye',
             ],
           },
         ],

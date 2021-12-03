@@ -1,6 +1,6 @@
 {
-  "name": "@pagexpress/pagexpress",
-  "version": "0.10.3",
+  "name": "@weborg-io/pagexpress",
+  "version": "0.10.4",
   "description": "Admin panel for Pagexpress CMS",
   "author": "Maciej Krzemianowski",
   "scripts": {
@@ -21,7 +21,7 @@
     "@nuxtjs/axios": "^5.13.1",
     "@nuxtjs/bulma": "^1.2.1",
     "@nuxtjs/pwa": "^3.3.5",
-    "@pagexpress/pagexpress-server": "^0.10.3",
+    "@weborg-io/pagexpress-server": "^0.10.4",
     "config": "^3.3.6",
     "lodash": "^4.17.20",
     "nuxt": "2.15.4",
@@ -30,7 +30,8 @@
     "vue-autosuggest": "^2.2.0",
     "vue-quill-editor": "^3.0.6",
     "vue-smooth-dnd": "0.8.1",
-    "vuedraggable": "^2.24.2"
+    "vuedraggable": "^2.24.2",
+    "vuejs-datepicker": "^1.6.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^5.0.0",
@@ -53,6 +54,10 @@
     "stylelint-config-standard": "^20.0.0",
     "uuid": "^8.2.0",
     "vue-jest": "^4.0.0-rc.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/weborg-io/pagexpress.git"
   },
   "gitHead": "4885d90e190accdbdcef419280e4ba3d1b79b945",
   "publishConfig": {

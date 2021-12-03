@@ -21,8 +21,27 @@
         :class="searchingNode ? 'tree-node__info--searching' : ''"
         class="tree-node__info"
       >
-        <div class="tree-node__title">
-          {{ componentPattern.name }}
+        <div v-if="!showRenameNodeForm" class="tree-node__title">
+          {{ label }}
+
+          <button
+            class="button is-info is-small is-light"
+            @click="toggleRenameNodeForm"
+          >
+            Rename
+          </button>
+        </div>
+        <div v-if="showRenameNodeForm" class="tree-node__rename-form">
+          <input v-model="label" type="text" class="input" />
+          <button class="button is-success is-small" @click="renameSelf">
+            Save
+          </button>
+          <button
+            class="button is-black is-small"
+            @click="toggleRenameNodeForm"
+          >
+            Cancel
+          </button>
         </div>
       </div>
       <div class="tree-node__actions">
@@ -114,6 +133,7 @@
         :search-phrase="searchPhrase"
         :add="add"
         :edit="edit"
+        :rename="rename"
         :remove="remove"
         :clone="clone"
         :copy="copy"
@@ -129,6 +149,7 @@ import { getAllFieldsValues } from '@/utils';
 
 export default {
   name: 'ComponentTreeNode',
+
   props: {
     componentPatterns: {
       type: Array,
@@ -199,6 +220,18 @@ export default {
       type: Function,
       required: true,
     },
+
+    rename: {
+      type: Function,
+      required: true,
+    },
+  },
+
+  data() {
+    return {
+      showRenameNodeForm: false,
+      label: '',
+    };
   },
 
   computed: {
@@ -230,7 +263,15 @@ export default {
     },
   },
 
+  mounted() {
+    this.label = this.component.treeNodeLabel || this.componentPattern.name;
+  },
+
   methods: {
+    toggleRenameNodeForm() {
+      this.showRenameNodeForm = !this.showRenameNodeForm;
+    },
+
     addFirstChild() {
       this.add({
         parentComponentId: this.component._id,
@@ -288,6 +329,14 @@ export default {
         componentId,
         componentData,
       });
+    },
+
+    renameSelf() {
+      this.rename({
+        componentId: this.component._id,
+        label: this.label,
+      });
+      this.toggleRenameNodeForm();
     },
   },
 };
@@ -476,6 +525,7 @@ export default {
   }
 
   &__info {
+    display: flex;
     flex: 0 0 15em;
     padding: var(--spacing);
     background-color: var(--gray);
@@ -493,8 +543,18 @@ export default {
   }
 
   &__title {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
     font-weight: 600;
     font-size: var(--font-small);
+  }
+
+  &__rename-form {
+    .input {
+      margin-bottom: var(--spacing);
+    }
   }
 }
 </style>

@@ -67,6 +67,7 @@
         :search-phrase="searchPhrase"
         :edit="toggleModalComponent"
         :add="showComponentFinder"
+        :rename="renameComponent"
         :remove="removeComponent"
         :clone="cloneComponent"
         :in-clipboard="inClipboard"
@@ -155,6 +156,7 @@ export default {
       'addComponentInPlace',
       'copyComponent',
       'moveComponent',
+      'renameComponent',
       'removeComponent',
       'reorderComponents',
       'updateComponent',
