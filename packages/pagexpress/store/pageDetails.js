@@ -85,6 +85,10 @@ export const mutations = {
     });
   },
 
+  UPDATE_VERSION(state, version) {
+    state.version = version;
+  },
+
   REMOVE_COMPONENT(state, componentId) {
     const nodeWithDescendants = getAllDescendants(
       componentId,
@@ -146,7 +150,7 @@ export const actions = {
     }
   },
 
-  async savePageDetails({ state, dispatch }) {
+  async savePageDetails({ state, dispatch, commit }) {
     const components = [...state.components];
     const data = await showRequestResult({
       request: this.$axios.put(`page-details/${state.details._id}`, {
@@ -159,6 +163,7 @@ export const actions = {
 
     if (data) {
       dispatch('resetDirtyState', null, { root: true });
+      commit('UPDATE_VERSION', data.version);
     }
   },
 
