@@ -43,32 +43,6 @@ export const mutations = {
   RESET_DIRTY_STATE(state) {
     state.isDirty = false;
   },
-
-  SET_USER_EDITING_PAGE(state, { user, pageParams }) {
-    const key = pageParams.join(':');
-
-    if (state.usersEditingPage[key]) {
-      state.usersEditingPage[key] = [];
-    }
-
-    if (!state.usersEditingPage[key].includes(user)) {
-      state.usersEditingPage[key].push(user);
-    }
-  },
-
-  REMOVE_USER_EDITING_PAGE(pageParams, user) {
-    const key = pageParams.join(':');
-
-    if (!state.usersEditingPage[key]) {
-      return;
-    }
-
-    const removingKeyIndex = state.usersEditingPage[key].indexOf(user);
-
-    if (removingKeyIndex !== -1) {
-      state.usersEditingPage[key].splice(removingKeyIndex, 1);
-    }
-  },
 };
 
 export const actions = {
