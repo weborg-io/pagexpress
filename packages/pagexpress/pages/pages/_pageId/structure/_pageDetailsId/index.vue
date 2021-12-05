@@ -92,6 +92,27 @@
       :toggle-visibility="toggleModalComponent"
       :save="saveChanges"
     />
+    <Modal
+      :toggle-visibility="toggleOtherUsersOnPageList"
+      :visible="showOtherUsersOnPage"
+    >
+      Other users editing page:
+      <div class="content">
+        <ul>
+          <li v-for="email of otherUsersOnPage" :key="email">
+            <strong>{{ email }}</strong>
+          </li>
+        </ul>
+      </div>
+    </Modal>
+    <FloatingButton
+      v-if="otherUsersOnPage.length"
+      style-type="warning"
+      title="Click to see who is editing this page"
+      :on-click="toggleOtherUsersOnPageList"
+    >
+      <fa :icon="['fas', 'user-edit']" />
+    </FloatingButton>
   </div>
 </template>
 
@@ -102,6 +123,8 @@ import {
   ComponentSelector,
   ComponentsFinder,
   ComponentTreeNode,
+  FloatingButton,
+  Modal,
   ModalComponent,
   Toolbar,
 } from '@/components';
@@ -112,6 +135,8 @@ export default {
     ComponentSelector,
     ComponentsFinder,
     ComponentTreeNode,
+    FloatingButton,
+    Modal,
     ModalComponent,
     Toolbar,
   },
@@ -122,7 +147,9 @@ export default {
       clipboard: null,
       addToNodeParams: {},
       showFinder: false,
+      showOtherUsersOnPage: false,
       editedComponentId: null,
+      otherUsersOnPage: [],
     };
   },
 
@@ -135,7 +162,7 @@ export default {
       pageData: state => state.page.mainData,
     }),
     ...mapGetters('pageDetails', ['rootComponents']),
-    ...mapGetters(['previewLink']),
+    ...mapGetters(['previewLink', 'loggedInUser']),
 
     editedComponent() {
       return this.editedComponentId
@@ -148,6 +175,21 @@ export default {
 
   mounted() {
     this.initPageData();
+    const emitEventData = {
+      user: this.loggedInUser,
+      pageDetailsId: this.$route.params.pageDetailsId,
+    };
+    this.$socket.emit('who-page-details', emitEventData);
+    this.$socket.emit('editing-page-details', emitEventData);
+    this.$socket.on(
+      'editing-page-details',
+      this.onEditingDetailsEvent.bind(this)
+    );
+    this.$socket.on('who-page-details', this.onWhoPageDetails.bind(this));
+    this.$socket.on(
+      'left-page-details',
+      this.onLeftPageDetailsEvent.bind(this)
+    );
   },
 
   methods: {
@@ -162,6 +204,38 @@ export default {
       'updateComponent',
       'publishPageDetails',
     ]),
+
+    onLeftPageDetailsEvent({ pageDetailsId, user }) {
+      if (pageDetailsId !== this.$route.params.pageDetailsId) {
+        return;
+      }
+
+      this.otherUsersOnPage = this.otherUsersOnPage.filter(
+        loggedUser => loggedUser !== user
+      );
+    },
+
+    onEditingDetailsEvent({ pageDetailsId, user }) {
+      if (
+        pageDetailsId === this.$route.params.pageDetailsId &&
+        user !== this.loggedInUser &&
+        !this.otherUsersOnPage.includes(user)
+      ) {
+        this.otherUsersOnPage = [...this.otherUsersOnPage, user];
+      }
+    },
+
+    onWhoPageDetails({ pageDetailsId, user }) {
+      if (
+        pageDetailsId === this.$route.params.pageDetailsId &&
+        user !== this.loggedInUser
+      ) {
+        this.$socket.emit('editing-page-details', {
+          user: this.loggedInUser,
+          pageDetailsId: this.$route.params.pageDetailsId,
+        });
+      }
+    },
 
     publish() {
       this.publishPageDetails(this.$route.params.pageId);
@@ -328,6 +402,10 @@ export default {
     searchByPhrase: _debounce(function (evt) {
       this.searchPhrase = evt.target.value;
     }, 250),
+
+    toggleOtherUsersOnPageList() {
+      this.showOtherUsersOnPage = !this.showOtherUsersOnPage;
+    },
   },
 };
 </script>

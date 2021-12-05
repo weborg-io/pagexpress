@@ -8,6 +8,8 @@
   --border-color: #e0e0e0;
   --blue: #3298dc;
   --green: #257942;
+  --orange: #ffa500;
+  --red: hsl(348, 100%, 61%);
 
   --spacing-025: 0.25em;
   --spacing-05: 0.5em;
@@ -71,14 +73,14 @@ html {
 }
 
 .draggable-forms-container__actions {
- display: flex;
- justify-content: flex-end;
- margin-top: var(--spacing);
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--spacing);
 }
 
 .smooth-dnd-container.vertical > .smooth-dnd-draggable-wrapper.columns {
- display: flex;
- overflow: visible;
+  display: flex;
+  overflow: visible;
 }
 
 /* Global drop element style */

@@ -2,7 +2,7 @@ const path = require('path');
 const Server = require('./server');
 
 class ServerConnector {
-  constructor({ envFilePath } = {}) {
+  constructor() {
     this.config = this.getConfig();
   }
 

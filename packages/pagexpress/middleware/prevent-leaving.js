@@ -1,4 +1,4 @@
-export default function({ store, params, next }) {
+export default function ({ store, params, next }) {
   if (store.state.isDirty) {
     if (confirm('Do you really want to leave? You have unsaved changes!')) {
       store.dispatch('resetDirtyState');

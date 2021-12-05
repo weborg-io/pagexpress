@@ -5,6 +5,7 @@ import ComponentTreeNode from './ComponentTreeNode';
 import DraggableForm from './DraggableForm';
 import DraggableFormsContainer from './DraggableFormsContainer';
 import Field from './Field';
+import FloatingButton from './FloatingButton';
 import Form from './Form';
 import MenuItems from './MenuItems';
 import Modal from './Modal';
@@ -29,6 +30,7 @@ export {
   DraggableForm,
   DraggableFormsContainer,
   Field,
+  FloatingButton,
   Form,
   MenuItems,
   Modal,

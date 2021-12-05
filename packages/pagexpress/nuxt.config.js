@@ -1,3 +1,5 @@
+const { CLIENT_BASE_PATH, SERVER_APP_URL, API_BASE_PATH } = process.env;
+
 export default {
   ssr: false,
   /*
@@ -15,6 +17,9 @@ export default {
       },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+  },
+  publicRuntimeConfig: {
+    serverAppUrl: SERVER_APP_URL,
   },
   manifest: {
     crossorigin: 'use-credentials',
@@ -34,10 +39,13 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [{ src: '~plugins/quill-plugin', ssr: false }],
+  plugins: [
+    { src: '~plugins/quill-plugin', ssr: false },
+    '~/plugins/socket.js',
+  ],
   router: {
-    middleware: ['auth', 'prevent-leaving'],
-    base: process.env.NUXT_BASE_PATH,
+    middleware: ['auth', 'prevent-leaving', 'left-editing-event'],
+    base: CLIENT_BASE_PATH,
   },
   /*
    ** Nuxt.js dev-modules
@@ -67,6 +75,8 @@ export default {
               'faSearch',
               'faTimes',
               'faEye',
+              'faExclamationTriangle',
+              'faUserEdit',
             ],
           },
         ],
@@ -85,7 +95,7 @@ export default {
     '@nuxtjs/pwa',
   ],
   axios: {
-    baseURL: process.env.API_URL,
+    baseURL: `${SERVER_APP_URL}${API_BASE_PATH}`,
   },
   auth: {
     redirect: {
@@ -98,7 +108,7 @@ export default {
       local: {
         endpoints: {
           login: { url: 'auth', method: 'post', propertyName: 'token' },
-          user: { url: 'users/me', method: 'get', propertyName: 'username' },
+          user: { url: 'users/me', method: 'get', propertyName: 'email' },
           logout: false,
         },
       },
