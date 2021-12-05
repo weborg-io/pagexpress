@@ -20,11 +20,10 @@ class Server {
   }
 
   initExpressServer() {
-    const app = express();
-    app.use(bodyParser.json());
-    app.use(cors());
-
-    this.app = app;
+    this.app = express();
+    this.app.use(bodyParser.json());
+    this.app.use(cors());
+    this.server = require('http').createServer(this.app);
   }
 
   initDb() {
@@ -39,16 +38,29 @@ class Server {
     this.app.use(errorHandler);
   }
 
+  initSocketIo() {
+    const io = require('socket.io')(this.server, {
+      cors: {
+        origin: process.env.CLIENT_APP_URL,
+        methods: ['GET', 'POST'],
+      },
+    });
+    this.app.io = io;
+
+    io.on('connection', require('../controllers/rtm'));
+  }
+
   init() {
     this.initExpressServer();
     this.initDb();
+    this.initSocketIo();
     this.initRouting();
     this.initErrorHandler();
   }
 
   run() {
     const { port, host } = this.config.server;
-    this.app.listen(port, host);
+    this.server.listen(port);
     console.log(`App listening at ${host}:${port}`);
   }
 }

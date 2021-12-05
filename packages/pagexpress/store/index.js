@@ -4,6 +4,7 @@ export const state = () => ({
   breadcrumbsLinks: [],
   siteInfo: {},
   isDirty: false,
+  usersEditingPage: {},
 });
 
 export const getters = {

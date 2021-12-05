@@ -1,5 +1,8 @@
 const _ = require('lodash');
-const { PageDetails, pageDetailsValidationSchema } = require('../models/PageDetails');
+const {
+  PageDetails,
+  pageDetailsValidationSchema,
+} = require('../models/PageDetails');
 const { Page } = require('../models/Page');
 const { BadRequest, NotFound } = require('../utils/errors');
 
@@ -19,7 +22,9 @@ const getPageDetails = async (req, res, next) => {
       const singlePageDetails = await PageDetails.findById(pageDetailsId);
 
       if (!singlePageDetails) {
-        throw new NotFound(`There is no page details with id: ${pageDetailsId}`);
+        throw new NotFound(
+          `There is no page details with id: ${pageDetailsId}`
+        );
       }
 
       res.json(singlePageDetails);
@@ -62,14 +67,20 @@ const createPageDetails = async (req, res, next) => {
     }
 
     if (req.body.default === true) {
-      await PageDetails.updateMany({ pageId: req.body.pageId }, { default: false });
+      await PageDetails.updateMany(
+        { pageId: req.body.pageId },
+        { default: false }
+      );
     }
 
     const pageDetails = new PageDetails(req.body);
     page.pageDetails.push(pageDetails);
 
     await pageDetails.save();
-    await Page.findOneAndUpdate({ _id: pageDetails.pageId }, { $push: { pageDetails: pageDetails } });
+    await Page.findOneAndUpdate(
+      { _id: pageDetails.pageId },
+      { $push: { pageDetails: pageDetails } }
+    );
     res.send(pageDetails._id);
   } catch (err) {
     next(err);
@@ -93,13 +104,18 @@ const updatePageDetails = async (req, res, next) => {
     }
 
     if (requestData.default === true) {
-      await PageDetails.updateMany({ pageId: requestData.pageId }, { default: false });
+      await PageDetails.updateMany(
+        { pageId: requestData.pageId },
+        { default: false }
+      );
     }
 
     const pageDetails = await PageDetails.findById(pageDetailsId);
 
     if (!version || version !== pageDetails.version) {
-      throw new BadRequest('Version is not recent one, please update page data and try again');
+      throw new BadRequest(
+        'Version is not recent one, please update page data and try again'
+      );
     }
 
     pageDetails.overwrite(requestData);

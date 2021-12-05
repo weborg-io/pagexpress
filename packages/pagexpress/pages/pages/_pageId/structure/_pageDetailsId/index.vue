@@ -92,6 +92,40 @@
       :toggle-visibility="toggleModalComponent"
       :save="saveChanges"
     />
+    <Modal
+      :toggle-visibility="toggleOtherUsersOnPageList"
+      :visible="showOtherUsersOnPage"
+    >
+      Other users editing page:
+      <div class="content">
+        <ul>
+          <li v-for="email of otherUsersOnPage" :key="email">
+            <strong>{{ email }}</strong>
+          </li>
+        </ul>
+      </div>
+    </Modal>
+    <FloatingButton
+      v-if="!outdatedVersion && otherUsersOnPage.length"
+      color="warning"
+      title="Click to see who is editing this page"
+      :on-click="toggleOtherUsersOnPageList"
+    >
+      <fa :icon="['fas', 'user-edit']" />
+    </FloatingButton>
+
+    <FloatingButton
+      v-if="outdatedVersion"
+      color="danger"
+      style-type="text"
+      title="Click to refresh the pate"
+      :on-click="reloadPageData"
+    >
+      <span class="icon">
+        <fa :icon="['fas', 'exclamation-triangle']" />
+      </span>
+      You see old page version - click to refresh
+    </FloatingButton>
   </div>
 </template>
 
@@ -102,6 +136,8 @@ import {
   ComponentSelector,
   ComponentsFinder,
   ComponentTreeNode,
+  FloatingButton,
+  Modal,
   ModalComponent,
   Toolbar,
 } from '@/components';
@@ -112,6 +148,8 @@ export default {
     ComponentSelector,
     ComponentsFinder,
     ComponentTreeNode,
+    FloatingButton,
+    Modal,
     ModalComponent,
     Toolbar,
   },
@@ -122,7 +160,10 @@ export default {
       clipboard: null,
       addToNodeParams: {},
       showFinder: false,
+      showOtherUsersOnPage: false,
       editedComponentId: null,
+      latestVersion: null,
+      otherUsersOnPage: [],
     };
   },
 
@@ -133,9 +174,10 @@ export default {
       isDirty: state => state.isDirty,
       siteInfo: state => state.siteInfo,
       pageData: state => state.page.mainData,
+      editingVersion: state => state.pageDetails.version,
     }),
     ...mapGetters('pageDetails', ['rootComponents']),
-    ...mapGetters(['previewLink']),
+    ...mapGetters(['previewLink', 'loggedInUser']),
 
     editedComponent() {
       return this.editedComponentId
@@ -144,10 +186,34 @@ export default {
           )
         : null;
     },
+
+    outdatedVersion() {
+      return this.latestVersion && this.editingVersion !== this.latestVersion;
+    },
   },
 
   mounted() {
     this.initPageData();
+    const emitEventData = {
+      user: this.loggedInUser,
+      pageDetailsId: this.$route.params.pageDetailsId,
+    };
+    this.$socket.emit('who-page-details', emitEventData);
+    this.$socket.emit('editing-page-details', emitEventData);
+    this.$socket.on(
+      'editing-page-details',
+      this.onEditingDetailsEvent.bind(this)
+    );
+    this.$socket.on('who-page-details', this.onWhoPageDetails.bind(this));
+    this.$socket.on(
+      'left-page-details',
+      this.onLeftPageDetailsEvent.bind(this)
+    );
+    this.$socket.on('update-page-structure', version => {
+      if (version !== this.currentPageVersion) {
+        this.latestVersion = version;
+      }
+    });
   },
 
   methods: {
@@ -162,6 +228,38 @@ export default {
       'updateComponent',
       'publishPageDetails',
     ]),
+
+    onLeftPageDetailsEvent({ pageDetailsId, user }) {
+      if (pageDetailsId !== this.$route.params.pageDetailsId) {
+        return;
+      }
+
+      this.otherUsersOnPage = this.otherUsersOnPage.filter(
+        loggedUser => loggedUser !== user
+      );
+    },
+
+    onEditingDetailsEvent({ pageDetailsId, user }) {
+      if (
+        pageDetailsId === this.$route.params.pageDetailsId &&
+        user !== this.loggedInUser &&
+        !this.otherUsersOnPage.includes(user)
+      ) {
+        this.otherUsersOnPage = [...this.otherUsersOnPage, user];
+      }
+    },
+
+    onWhoPageDetails({ pageDetailsId, user }) {
+      if (
+        pageDetailsId === this.$route.params.pageDetailsId &&
+        user !== this.loggedInUser
+      ) {
+        this.$socket.emit('editing-page-details', {
+          user: this.loggedInUser,
+          pageDetailsId: this.$route.params.pageDetailsId,
+        });
+      }
+    },
 
     publish() {
       this.publishPageDetails(this.$route.params.pageId);
@@ -328,6 +426,19 @@ export default {
     searchByPhrase: _debounce(function (evt) {
       this.searchPhrase = evt.target.value;
     }, 250),
+
+    toggleOtherUsersOnPageList() {
+      this.showOtherUsersOnPage = !this.showOtherUsersOnPage;
+    },
+
+    async reloadPageData() {
+      if (confirm('Reloading will remove all unsaved changes!')) {
+        await this.$store.dispatch(
+          'pageDetails/fetchPageDetails',
+          this.$route.params.pageDetailsId
+        );
+      }
+    },
   },
 };
 </script>
