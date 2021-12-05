@@ -48,7 +48,7 @@ class Server {
 
   run() {
     const { port, host } = this.config.server;
-    this.app.listen(port, host);
+    this.app.listen(port);
     console.log(`App listening at ${host}:${port}`);
   }
 }
