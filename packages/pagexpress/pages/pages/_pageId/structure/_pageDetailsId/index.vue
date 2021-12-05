@@ -106,12 +106,25 @@
       </div>
     </Modal>
     <FloatingButton
-      v-if="otherUsersOnPage.length"
-      style-type="warning"
+      v-if="!outdatedVersion && otherUsersOnPage.length"
+      color="warning"
       title="Click to see who is editing this page"
       :on-click="toggleOtherUsersOnPageList"
     >
       <fa :icon="['fas', 'user-edit']" />
+    </FloatingButton>
+
+    <FloatingButton
+      v-if="outdatedVersion"
+      color="danger"
+      style-type="text"
+      title="Click to refresh the pate"
+      :on-click="reloadPageData"
+    >
+      <span class="icon">
+        <fa :icon="['fas', 'exclamation-triangle']" />
+      </span>
+      You see old page version - click to refresh
     </FloatingButton>
   </div>
 </template>
@@ -149,6 +162,7 @@ export default {
       showFinder: false,
       showOtherUsersOnPage: false,
       editedComponentId: null,
+      latestVersion: null,
       otherUsersOnPage: [],
     };
   },
@@ -160,6 +174,7 @@ export default {
       isDirty: state => state.isDirty,
       siteInfo: state => state.siteInfo,
       pageData: state => state.page.mainData,
+      editingVersion: state => state.pageDetails.version,
     }),
     ...mapGetters('pageDetails', ['rootComponents']),
     ...mapGetters(['previewLink', 'loggedInUser']),
@@ -170,6 +185,10 @@ export default {
             component => component._id === this.editedComponentId
           )
         : null;
+    },
+
+    outdatedVersion() {
+      return this.latestVersion && this.editingVersion !== this.latestVersion;
     },
   },
 
@@ -190,6 +209,11 @@ export default {
       'left-page-details',
       this.onLeftPageDetailsEvent.bind(this)
     );
+    this.$socket.on('update-page-structure', version => {
+      if (version !== this.currentPageVersion) {
+        this.latestVersion = version;
+      }
+    });
   },
 
   methods: {
@@ -405,6 +429,15 @@ export default {
 
     toggleOtherUsersOnPageList() {
       this.showOtherUsersOnPage = !this.showOtherUsersOnPage;
+    },
+
+    async reloadPageData() {
+      if (confirm('Reloading will remove all unsaved changes!')) {
+        await this.$store.dispatch(
+          'pageDetails/fetchPageDetails',
+          this.$route.params.pageDetailsId
+        );
+      }
     },
   },
 };

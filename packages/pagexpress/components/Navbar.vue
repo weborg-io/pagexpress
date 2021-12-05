@@ -6,15 +6,11 @@
       </div>
       <div class="navbar-menu">
         <div class="navbar-start">
-          <nuxt-link to="/" class="navbar-item" exact>
-            Pages
-          </nuxt-link>
+          <nuxt-link to="/" class="navbar-item" exact> Pages </nuxt-link>
           <nuxt-link to="/components" class="navbar-item">
             Components
           </nuxt-link>
-          <nuxt-link to="/menus" class="navbar-item">
-            Menu
-          </nuxt-link>
+          <nuxt-link to="/menus" class="navbar-item"> Menu </nuxt-link>
         </div>
       </div>
       <div class="navbar-end navbar__action">

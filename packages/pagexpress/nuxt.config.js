@@ -108,7 +108,7 @@ export default {
       local: {
         endpoints: {
           login: { url: 'auth', method: 'post', propertyName: 'token' },
-          user: { url: 'users/me', method: 'get', propertyName: 'email' },
+          user: { url: 'users/me', method: 'get', propertyName: 'username' },
           logout: false,
         },
       },

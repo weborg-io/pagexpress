@@ -121,11 +121,6 @@ const updatePageDetails = async (req, res, next) => {
     pageDetails.overwrite(requestData);
     await pageDetails.save();
     res.json(pageDetails);
-
-    const io = req.app.get('socketio');
-    io.emit('update-page-structure', {
-      version: version + 1,
-    });
   } catch (err) {
     next(err);
   }
