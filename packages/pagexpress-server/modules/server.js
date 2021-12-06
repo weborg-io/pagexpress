@@ -44,6 +44,7 @@ class Server {
         origin: process.env.CLIENT_APP_URL,
         methods: ['GET', 'POST'],
       },
+      transports: ['websocket'],
     });
     this.app.io = io;
 
