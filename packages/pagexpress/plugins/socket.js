@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 
 export default ({ $config }, inject) => {
-  const socket = io($config.serverAppUrl, {
+  const socket = io($config.websocketServerUrl, {
     reconnectionDelayMax: 10000,
   });
   inject('socket', socket);
