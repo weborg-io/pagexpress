@@ -1,4 +1,5 @@
-const { CLIENT_BASE_PATH, SERVER_APP_URL, API_BASE_PATH } = process.env;
+const { CLIENT_BASE_PATH, SERVER_APP_URL, WEBSOCKET_URL, API_BASE_PATH } =
+  process.env;
 
 export default {
   ssr: false,
@@ -19,7 +20,7 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   publicRuntimeConfig: {
-    serverAppUrl: SERVER_APP_URL,
+    websocketServerUrl: WEBSOCKET_URL,
   },
   manifest: {
     crossorigin: 'use-credentials',
