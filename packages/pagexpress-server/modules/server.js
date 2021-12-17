@@ -21,7 +21,8 @@ class Server {
 
   initExpressServer() {
     this.app = express();
-    this.app.use(bodyParser.json());
+    this.app.use(bodyParser.json({ limit: '50mb' }));
+    this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
     this.app.use(cors());
     this.server = require('http').createServer(this.app);
   }
