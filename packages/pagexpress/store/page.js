@@ -96,7 +96,8 @@ export const actions = {
       updatedMainPageData && !state.unsavedData.includes('pageDetails');
 
     if (!savedAllData) {
-      const { _id, title, name, description, country } = state.pageDetails;
+      const { _id, title, name, description, country, version } =
+        state.pageDetails;
 
       const saveDetailsResult = await showRequestResult({
         request: this.$axios.put(`page-details/${_id}`, {
@@ -105,6 +106,7 @@ export const actions = {
           name,
           pageId: state.mainData._id,
           title,
+          version,
         }),
         dispatch,
       });

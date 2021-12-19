@@ -13,7 +13,7 @@ const getPages = async (req, res, next) => {
         .populate({
           path: 'pageDetails',
           model: 'PageDetails',
-          select: 'name country title description',
+          select: 'name country title description version',
         })
         .exec();
 
@@ -22,12 +22,16 @@ const getPages = async (req, res, next) => {
       }
 
       const { type } = singlePage.toObject();
-      const pageType = await PageType.findById(type).populate('attributes.type').exec();
+      const pageType = await PageType.findById(type)
+        .populate('attributes.type')
+        .exec();
       const pageTypeData = pageType.toObject();
-      const pageTypeAttributesSchema = pageTypeData.attributes.map(attribute => ({
-        ...attribute,
-        type: attribute.type.type,
-      }));
+      const pageTypeAttributesSchema = pageTypeData.attributes.map(
+        attribute => ({
+          ...attribute,
+          type: attribute.type.type,
+        })
+      );
 
       res.json({
         pageType: pageTypeData.name,
@@ -37,7 +41,8 @@ const getPages = async (req, res, next) => {
     } else {
       const sortableFields = ['name', 'type', 'url', 'createdAt', 'updatedAt'];
       const listFeatures = new ListFeatures(Page, req.query, 'name');
-      const { currentPage, itemsPerPage, limit, skip, totalPages } = await listFeatures.getPaginationParameters();
+      const { currentPage, itemsPerPage, limit, skip, totalPages } =
+        await listFeatures.getPaginationParameters();
       const sortBy = listFeatures.getSort(sortableFields);
       const queryFilter = listFeatures.getQueryFilter();
 
