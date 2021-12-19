@@ -1,6 +1,3 @@
-const { CLIENT_BASE_PATH, SERVER_APP_URL, WEBSOCKET_URL, API_BASE_PATH } =
-  process.env;
-
 export default {
   ssr: false,
   /*
@@ -20,7 +17,7 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
   publicRuntimeConfig: {
-    websocketServerUrl: WEBSOCKET_URL,
+    websocketServerUrl: process.env.WEBSOCKET_URL,
   },
   manifest: {
     crossorigin: 'use-credentials',
@@ -46,7 +43,7 @@ export default {
   ],
   router: {
     middleware: ['auth', 'prevent-leaving', 'left-editing-event'],
-    base: CLIENT_BASE_PATH,
+    base: process.env.CLIENT_BASE_PATH,
   },
   /*
    ** Nuxt.js dev-modules
@@ -96,7 +93,7 @@ export default {
     '@nuxtjs/pwa',
   ],
   axios: {
-    baseURL: `${SERVER_APP_URL}${API_BASE_PATH}`,
+    baseURL: `${process.env.SERVER_APP_URL}${process.env.API_BASE_PATH}`,
   },
   auth: {
     redirect: {
