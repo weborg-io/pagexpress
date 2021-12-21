@@ -3,6 +3,10 @@ const unlockViewEvents = {
 };
 
 export default function ({ store, from, $socket }) {
+  if (!from) {
+    return;
+  }
+
   const { params } = from;
 
   for (const paramKey of Object.keys(params)) {

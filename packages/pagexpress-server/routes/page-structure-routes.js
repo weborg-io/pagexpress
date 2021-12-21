@@ -1,6 +1,7 @@
-const router = require('express').Router();
-const { getPageStructure } = require('../controllers/page-structure-controller');
+import { Router } from 'express';
+import { getPageStructure } from '../controllers/page-structure-controller';
 
+const router = Router();
 router.get('/page-structure/:pageId', getPageStructure);
 
-module.exports = router;
+export default router;

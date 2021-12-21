@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   API_CONSUMER: 'api-consumer',
   EDITOR: 'editor',
   REDACTOR: 'redactor',

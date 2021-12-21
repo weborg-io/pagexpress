@@ -1,6 +1,8 @@
-const { Schema } = require('mongoose');
-const Joi = require('joi');
-Joi.objectId = require('joi-objectid')(Joi);
+import { Schema } from 'mongoose';
+import Joi from 'joi';
+import JoiObjectId from 'joi-objectid';
+
+Joi.objectId = JoiObjectId(Joi);
 
 const FieldOptionModelSchema = () => ({
   name: { type: String, require: true, min: 3, max: 50 },
@@ -40,8 +42,4 @@ const fieldValidationSchema = Joi.object({
 });
 /* eslint-enable */
 
-module.exports = {
-  FieldModelSchema,
-  FieldOptionModelSchema,
-  fieldValidationSchema,
-};
+export { FieldModelSchema, FieldOptionModelSchema, fieldValidationSchema };

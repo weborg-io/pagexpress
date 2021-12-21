@@ -1,4 +1,4 @@
-const { GeneralError } = require('../utils/errors');
+import { GeneralError } from '../utils/errors.js';
 
 // eslint-disable-next-line
 const errorHandler = (err, req, res, next) => {
@@ -20,4 +20,4 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
-module.exports = errorHandler;
+export default errorHandler;

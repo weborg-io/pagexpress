@@ -1,7 +1,4 @@
-/**
- * @param {WebSocket} socket
- */
-module.exports = socket => {
+export default socket => {
   socket.on('editing-page-details', user =>
     socket.broadcast.emit('editing-page-details', user)
   );

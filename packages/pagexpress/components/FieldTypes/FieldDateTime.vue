@@ -11,13 +11,11 @@
 </template>
 
 <script>
-import Datepicker from 'vuejs-datepicker';
-
 export default {
   name: 'FieldDateTime',
 
   components: {
-    Datepicker,
+    Datepicker: () => import('vuejs-datepicker'),
   },
 
   props: {

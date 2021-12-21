@@ -1,9 +1,5 @@
-const auth = require('./auth');
-const grandAccess = require('./grand-access');
-const errorHandler = require('./error-handler');
+import auth from './auth';
+import grandAccess from './grand-access';
+import errorHandler from './error-handler';
 
-module.exports = {
-  auth,
-  grandAccess,
-  errorHandler,
-};
+export { auth, grandAccess, errorHandler };

@@ -1,6 +1,8 @@
-const { Schema, model } = require('mongoose');
-const Joi = require('joi');
-Joi.objectId = require('joi-objectid')(Joi);
+import { Schema, model } from 'mongoose';
+import Joi from 'joi';
+import JoiObjectId from 'joi-objectid';
+
+Joi.objectId = JoiObjectId(Joi);
 
 const menuItemSchema = new Schema(
   {
@@ -34,8 +36,4 @@ const menuValidationSchema = Joi.object({
 
 const Menu = model('Menu', menuSchema);
 
-module.exports = {
-  menuItemSchema,
-  menuValidationSchema,
-  Menu,
-};
+export { menuItemSchema, menuValidationSchema, Menu };

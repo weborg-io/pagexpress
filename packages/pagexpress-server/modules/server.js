@@ -1,7 +1,7 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const errorHandler = require('../middlewares/error-handler');
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import errorHandler from '../middlewares/error-handler.js';
 
 /**
  * @typedef ServerConfig
@@ -67,4 +67,4 @@ class Server {
   }
 }
 
-module.exports = Server;
+export default Server;

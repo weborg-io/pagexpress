@@ -1,9 +1,15 @@
-const { Schema, model } = require('mongoose');
-const Joi = require('joi');
-Joi.objectId = require('joi-objectid')(Joi);
+import { Schema, model } from 'mongoose';
+import Joi from 'joi';
+import JoiObjectId from 'joi-objectid';
+
+Joi.objectId = JoiObjectId(Joi);
 
 const templateComponentSchema = new Schema({
-  componentPatternId: { type: Schema.Types.ObjectId, required: true, ref: 'ComponentPattern' },
+  componentPatternId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'ComponentPattern',
+  },
   childrenComponentPatterns: {
     default: undefined,
     type: [{ type: Schema.Types.ObjectId, ref: 'ComponentPattern' }],
@@ -29,8 +35,4 @@ const pageTemplateValidationSchema = Joi.object({
 
 const PageTemplate = model('PageTemplate', pageTemplateSchema);
 
-module.exports = {
-  pageTemplateSchema,
-  PageTemplate,
-  pageTemplateValidationSchema,
-};
+export { pageTemplateSchema, PageTemplate, pageTemplateValidationSchema };

@@ -1,6 +1,8 @@
-const { Schema, model } = require('mongoose');
-const Joi = require('joi');
-Joi.objectId = require('joi-objectid')(Joi);
+import { Schema, model } from 'mongoose';
+import Joi from 'joi';
+import JoiObjectId from 'joi-objectid';
+
+Joi.objectId = JoiObjectId(Joi);
 
 const pageSchema = new Schema(
   {
@@ -25,8 +27,4 @@ const pageValidationSchema = Joi.object({
 
 const Page = model('Page', pageSchema);
 
-module.exports = {
-  pageValidationSchema,
-  pageSchema,
-  Page,
-};
+export { pageValidationSchema, pageSchema, Page };

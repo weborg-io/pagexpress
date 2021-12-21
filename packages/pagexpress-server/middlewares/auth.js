@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const config = require('config');
+import jwt from 'jsonwebtoken';
+import config from 'config';
 
 const auth = (req, res, next) => {
   const AuthorizationHeader = req.header('Authorization');
@@ -31,4 +31,4 @@ const auth = (req, res, next) => {
   }
 };
 
-module.exports = auth;
+export default auth;

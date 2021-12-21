@@ -1,6 +1,6 @@
-const { User } = require('../models/User');
-const bcrypt = require('bcrypt');
-const { BadRequest, NotFound } = require('../utils/errors');
+import { User } from '../models/User';
+import bcrypt from 'bcrypt';
+import { BadRequest, NotFound } from '../utils/errors';
 
 const auth = async (req, res, next) => {
   const { email, password } = req.body;
@@ -26,4 +26,4 @@ const auth = async (req, res, next) => {
   res.json({ token });
 };
 
-module.exports = auth;
+export default auth;

@@ -1,7 +1,8 @@
-const router = require('express').Router();
-const { auth, grandAccess } = require('../middlewares');
-const { componentUsage } = require('../controllers/stats-controller');
+import { Router } from 'express';
+import { auth, grandAccess } from '../middlewares';
+import { componentUsage } from '../controllers/stats-controller';
 
+const router = Router();
 router.get(
   '/stats/component-usage/:componentId',
   auth,
@@ -9,4 +10,4 @@ router.get(
   componentUsage
 );
 
-module.exports = router;
+export default router;

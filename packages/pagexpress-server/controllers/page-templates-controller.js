@@ -1,11 +1,16 @@
-const { PageTemplate, pageTemplateValidationSchema } = require('../models/PageTemplate');
-const { BadRequest, NotFound } = require('../utils/errors');
+import {
+  PageTemplate,
+  pageTemplateValidationSchema,
+} from '../models/PageTemplate';
+import { BadRequest, NotFound } from '../utils/errors';
 
 const getPageTemplates = async (req, res, next) => {
   const { pageTemplateId } = req.params;
 
   try {
-    const query = pageTemplateId ? PageTemplate.findById(pageTemplateId) : PageTemplate.find();
+    const query = pageTemplateId
+      ? PageTemplate.findById(pageTemplateId)
+      : PageTemplate.find();
     const data = await query.exec();
 
     if (pageTemplateId && !data) {
@@ -43,7 +48,10 @@ const updatePageTemplate = async (req, res, next) => {
       throw new BadRequest(error.details[0].message);
     }
 
-    const pageTemplate = await PageTemplate.findOneAndUpdate({ _id: pageTemplateId }, req.body);
+    const pageTemplate = await PageTemplate.findOneAndUpdate(
+      { _id: pageTemplateId },
+      req.body
+    );
     res.json(pageTemplate);
   } catch (err) {
     next(err);
@@ -61,7 +69,7 @@ const deletePageTemplate = async (req, res, next) => {
   }
 };
 
-module.exports = {
+export {
   getPageTemplates,
   createPageTemplate,
   updatePageTemplate,

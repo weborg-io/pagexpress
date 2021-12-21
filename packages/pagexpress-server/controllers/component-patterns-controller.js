@@ -1,7 +1,10 @@
-const { ComponentPattern, componentPatternValidationSchema } = require('../models/ComponentPattern');
-const { BadRequest, NotFound } = require('../utils/errors');
-const ListFeatures = require('../utils/ListFeatures');
-const { normalizeComponentPattern } = require('../utils/normalizers');
+import {
+  ComponentPattern,
+  componentPatternValidationSchema,
+} from '../models/ComponentPattern';
+import { BadRequest, NotFound } from '../utils/errors';
+import ListFeatures from '../utils/ListFeatures';
+import { normalizeComponentPattern } from '../utils/normalizers';
 
 const getComponentPatterns = async (req, res, next) => {
   const { componentPatternId } = req.params;
@@ -30,11 +33,14 @@ const getComponentPatterns = async (req, res, next) => {
         throw new NotFound('Component pattern not exist');
       }
 
-      return plainData ? res.json(data) : res.json(normalizeComponentPattern(data.toObject()));
+      return plainData
+        ? res.json(data)
+        : res.json(normalizeComponentPattern(data.toObject()));
     }
 
     const listFeatures = new ListFeatures(ComponentPattern, req.query, 'name');
-    const { currentPage, itemsPerPage, limit, skip, totalPages } = await listFeatures.getPaginationParameters();
+    const { currentPage, itemsPerPage, limit, skip, totalPages } =
+      await listFeatures.getPaginationParameters();
     const queryFilter = listFeatures.getQueryFilter();
     const data = await ComponentPattern.find(queryFilter)
       .populate({
@@ -51,7 +57,9 @@ const getComponentPatterns = async (req, res, next) => {
       .limit(limit)
       .exec();
 
-    const normalizedData = data.map(singleComponentData => normalizeComponentPattern(singleComponentData.toObject()));
+    const normalizedData = data.map(singleComponentData =>
+      normalizeComponentPattern(singleComponentData.toObject())
+    );
 
     res.json({
       currentPage,
@@ -89,7 +97,10 @@ const updateComponentPattern = async (req, res, next) => {
       throw new BadRequest(error.details[0].message);
     }
 
-    const componentPattern = await ComponentPattern.findOneAndUpdate({ _id: componentPatternId }, req.body);
+    const componentPattern = await ComponentPattern.findOneAndUpdate(
+      { _id: componentPatternId },
+      req.body
+    );
     res.json(componentPattern);
   } catch (err) {
     next(err);
@@ -107,7 +118,7 @@ const deleteComponentPattern = async (req, res, next) => {
   }
 };
 
-module.exports = {
+export {
   getComponentPatterns,
   createComponentPattern,
   updateComponentPattern,

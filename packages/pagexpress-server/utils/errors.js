@@ -18,8 +18,4 @@ class GeneralError extends Error {
 class BadRequest extends GeneralError {}
 class NotFound extends GeneralError {}
 
-module.exports = {
-  GeneralError,
-  BadRequest,
-  NotFound,
-};
+export { GeneralError, BadRequest, NotFound };

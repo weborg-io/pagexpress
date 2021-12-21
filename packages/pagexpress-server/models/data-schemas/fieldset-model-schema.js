@@ -1,5 +1,5 @@
-const { FieldModelSchema, fieldValidationSchema } = require('./field-model-schema');
-const Joi = require('joi');
+import { FieldModelSchema, fieldValidationSchema } from './field-model-schema';
+import Joi from 'joi';
 
 const FieldsetModelSchema = ({ fieldSchema } = {}) => ({
   name: { type: String, require: true, min: 3, max: 30 },
@@ -20,7 +20,4 @@ const fieldsetValidationSchema = Joi.object({
 });
 /* eslint-enable */
 
-module.exports = {
-  FieldsetModelSchema,
-  fieldsetValidationSchema,
-};
+export { FieldsetModelSchema, fieldsetValidationSchema };

@@ -1,20 +1,20 @@
-const auth = require('./auth-routes');
-const componentPatterns = require('./component-patterns-routes');
-const countries = require('./countries-routes');
-const definitions = require('./definitions-routes');
-const fields = require('./fields-routes');
-const menu = require('./menus-routes');
-const pageAttributeTypes = require('./page-attribute-types-routes');
-const pageDetails = require('./page-details-routes');
-const pageStructure = require('./page-structure-routes');
-const pageTemplates = require('./page-templates-routes');
-const pageTypes = require('./page-types-routes');
-const pages = require('./pages-routes');
-const siteInfo = require('./site-info-routes');
-const stats = require('./stats-routes');
-const users = require('./users-routes');
+import auth from './auth-routes';
+import componentPatterns from './component-patterns-routes';
+import countries from './countries-routes';
+import definitions from './definitions-routes';
+import fields from './fields-routes';
+import menu from './menus-routes';
+import pageAttributeTypes from './page-attribute-types-routes';
+import pageDetails from './page-details-routes';
+import pageStructure from './page-structure-routes';
+import pageTemplates from './page-templates-routes';
+import pageTypes from './page-types-routes';
+import pages from './pages-routes';
+import siteInfo from './site-info-routes';
+import stats from './stats-routes';
+import users from './users-routes';
 
-module.exports = app => {
+export default app => {
   app.use('/v1', auth);
   app.use('/v1', componentPatterns);
   app.use('/v1', countries);

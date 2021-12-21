@@ -1,6 +1,6 @@
-const { User, userValidationSchema } = require('../models/User');
-const bcrypt = require('bcrypt');
-const { BadRequest, NotFound } = require('../utils/errors');
+import { User, userValidationSchema } from '../models/User';
+import bcrypt from 'bcrypt';
+import { BadRequest, NotFound } from '../utils/errors';
 
 const authUser = (req, res, next) => {
   try {
@@ -63,7 +63,11 @@ const resetPassword = async (req, res, next) => {
   try {
     const user = await User.findById(userId);
 
-    const { error } = userValidationSchema.validate({ username: user.username, email: user.email, password });
+    const { error } = userValidationSchema.validate({
+      username: user.username,
+      email: user.email,
+      password,
+    });
 
     if (error) {
       throw new BadRequest(error.details[0].message);
@@ -91,10 +95,4 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  authUser,
-  getUsers,
-  createUser,
-  resetPassword,
-  deleteUser,
-};
+export { authUser, getUsers, createUser, resetPassword, deleteUser };

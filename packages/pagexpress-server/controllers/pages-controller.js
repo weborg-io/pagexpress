@@ -1,7 +1,7 @@
-const { Page, pageValidationSchema } = require('../models/Page');
-const { PageType } = require('../models/PageType');
-const ListFeatures = require('../utils/ListFeatures');
-const { BadRequest, NotFound } = require('../utils/errors');
+import { Page, pageValidationSchema } from '../models/Page';
+import { PageType } from '../models/PageType';
+import ListFeatures from '../utils/ListFeatures';
+import { BadRequest, NotFound } from '../utils/errors';
 
 const getPages = async (req, res, next) => {
   const { pageId } = req.params;
@@ -120,9 +120,4 @@ const deletePage = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  getPages,
-  createPage,
-  updatePage,
-  deletePage,
-};
+export { getPages, createPage, updatePage, deletePage };

@@ -1,20 +1,25 @@
-const router = require('express').Router();
-const { auth, grandAccess } = require('../middlewares');
-
-const {
+import { Router } from 'express';
+import { auth, grandAccess } from '../middlewares';
+import {
   getComponentPatterns,
   createComponentPattern,
   updateComponentPattern,
   deleteComponentPattern,
-} = require('../controllers/component-patterns-controller');
+} from '../controllers/component-patterns-controller';
 
+const router = Router();
 router.get(
   '/component-patterns/:componentPatternId?',
   auth,
   grandAccess('readAny', 'componentPattern'),
   getComponentPatterns
 );
-router.post('/component-patterns', auth, grandAccess('createOwn', 'componentPattern'), createComponentPattern);
+router.post(
+  '/component-patterns',
+  auth,
+  grandAccess('createOwn', 'componentPattern'),
+  createComponentPattern
+);
 router.put(
   '/component-patterns/:componentPatternId',
   auth,
@@ -28,4 +33,4 @@ router.delete(
   deleteComponentPattern
 );
 
-module.exports = router;
+export default router;

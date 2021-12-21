@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const dbConnect = ({ host, port, collection, user, password }) => {
   mongoose.connect(`mongodb://${host}:${port}/${collection}`, {
@@ -12,4 +12,4 @@ const dbConnect = ({ host, port, collection, user, password }) => {
   });
 };
 
-module.exports = dbConnect;
+export default dbConnect;

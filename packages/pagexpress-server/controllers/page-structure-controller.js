@@ -1,8 +1,8 @@
-const { Page } = require('../models/Page');
-const { ComponentPattern } = require('../models/ComponentPattern');
-const { buildPageStructure } = require('../utils/page-structure');
-const R = require('ramda');
-const { NotFound } = require('../utils/errors');
+import { Page } from '../models/Page';
+import { ComponentPattern } from '../models/ComponentPattern';
+import { buildPageStructure } from '../utils/page-structure';
+import R from 'ramda';
+import { NotFound } from '../utils/errors';
 
 const getPageStructure = async (req, res, next) => {
   const { pageId } = req.params;
@@ -13,7 +13,8 @@ const getPageStructure = async (req, res, next) => {
       .populate({
         path: 'pageDetails',
         model: 'PageDetails',
-        select: 'name country default title description components createdAt updatedAt',
+        select:
+          'name country default title description components createdAt updatedAt',
         populate: {
           path: 'country',
           select: 'name code language -_id',
@@ -43,8 +44,22 @@ const getPageStructure = async (req, res, next) => {
       ...R.pick(['attributes', 'name', 'url', 'type'], fullPageData),
       variants: pageVariants.map(variant => {
         return {
-          ...R.pick(['name', 'country', 'title', 'description', 'createdAt', 'updatedAt'], variant),
-          components: variant.components.map(({ name, data, components }) => ({ name, data, components })),
+          ...R.pick(
+            [
+              'name',
+              'country',
+              'title',
+              'description',
+              'createdAt',
+              'updatedAt',
+            ],
+            variant
+          ),
+          components: variant.components.map(({ name, data, components }) => ({
+            name,
+            data,
+            components,
+          })),
         };
       }),
     };
@@ -55,6 +70,4 @@ const getPageStructure = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  getPageStructure,
-};
+export { getPageStructure };

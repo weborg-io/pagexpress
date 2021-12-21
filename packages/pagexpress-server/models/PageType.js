@@ -1,11 +1,17 @@
-const { Schema, model } = require('mongoose');
-const Joi = require('joi');
-Joi.objectId = require('joi-objectid')(Joi);
+import { Schema, model } from 'mongoose';
+import Joi from 'joi';
+import JoiObjectId from 'joi-objectid';
+
+Joi.objectId = JoiObjectId(Joi);
 
 const pageTypeAttributeSchema = new Schema({
   name: { type: String, require: true, min: 3, max: 30 },
   description: { type: String, min: 10, max: 250 },
-  type: { type: Schema.Types.ObjectId, require: true, ref: 'PageAttributeType' },
+  type: {
+    type: Schema.Types.ObjectId,
+    require: true,
+    ref: 'PageAttributeType',
+  },
 });
 
 const pageTypeSchema = new Schema({
@@ -26,7 +32,7 @@ const pageTypeValidationSchema = Joi.object({
 
 const PageType = model('PageType', pageTypeSchema);
 
-module.exports = {
+export {
   pageTypeAttributeSchema,
   pageTypeSchema,
   PageType,

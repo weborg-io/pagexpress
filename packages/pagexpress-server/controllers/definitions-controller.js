@@ -1,11 +1,13 @@
-const { Definition, definitionValidationSchema } = require('../models/Definition');
-const { BadRequest, NotFound } = require('../utils/errors');
+import { Definition, definitionValidationSchema } from '../models/Definition';
+import { BadRequest, NotFound } from '../utils/errors';
 
 const getDefinitions = async (req, res, next) => {
   const { definitionId } = req.params;
 
   try {
-    const query = definitionId ? Definition.findById(definitionId) : Definition.find();
+    const query = definitionId
+      ? Definition.findById(definitionId)
+      : Definition.find();
     const data = await query.exec();
 
     if (definitionId && !data) {
@@ -43,7 +45,10 @@ const updateDefinition = async (req, res, next) => {
       throw new BadRequest(error.details[0].message);
     }
 
-    const definition = await Definition.findOneAndUpdate({ _id: definitionId }, req.body);
+    const definition = await Definition.findOneAndUpdate(
+      { _id: definitionId },
+      req.body
+    );
     res.json(definition);
   } catch (err) {
     next(err);
@@ -61,9 +66,4 @@ const deleteDefinition = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  getDefinitions,
-  createDefinition,
-  updateDefinition,
-  deleteDefinition,
-};
+export { getDefinitions, createDefinition, updateDefinition, deleteDefinition };

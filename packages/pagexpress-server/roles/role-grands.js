@@ -1,13 +1,8 @@
-const AccessControl = require('accesscontrol');
+import AccessControl from 'accesscontrol';
+import roles from './roles';
+
+const { API_CONSUMER, REDACTOR, EDITOR, DEV, DEV_JUNIOR, ADMIN } = roles;
 const ac = new AccessControl();
-const {
-  API_CONSUMER,
-  REDACTOR,
-  EDITOR,
-  DEV,
-  DEV_JUNIOR,
-  ADMIN,
-} = require('./roles');
 
 const roleGrands = () => {
   ac.grant(API_CONSUMER).readAny('pageDetails').readAny('menu');
@@ -95,4 +90,4 @@ const roleGrands = () => {
   return ac;
 };
 
-exports.roles = roleGrands();
+export default roleGrands();

@@ -1,19 +1,25 @@
-const router = require('express').Router();
-const { auth, grandAccess } = require('../middlewares');
-const {
+import { Router } from 'express';
+import { auth, grandAccess } from '../middlewares';
+import {
   getPageAttributeTypes,
   createPageAttributeType,
   updatePageAttributeType,
   deletePageAttributeType,
-} = require('../controllers/page-attribute-types-controller');
+} from '../controllers/page-attribute-types-controller';
 
+const router = Router();
 router.get(
   '/page-attribute-types/:pageAttributeTypeId?',
   auth,
   grandAccess('readAny', 'pageAttributeType'),
   getPageAttributeTypes
 );
-router.post('/page-attribute-types', auth, grandAccess('createOwn', 'pageAttributeType'), createPageAttributeType);
+router.post(
+  '/page-attribute-types',
+  auth,
+  grandAccess('createOwn', 'pageAttributeType'),
+  createPageAttributeType
+);
 router.put(
   '/page-attribute-types/:pageAttributeTypeId',
   auth,
@@ -27,4 +33,4 @@ router.delete(
   deletePageAttributeType
 );
 
-module.exports = router;
+export default router;

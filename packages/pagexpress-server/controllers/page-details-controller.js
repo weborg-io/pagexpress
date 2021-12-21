@@ -1,10 +1,10 @@
-const _ = require('lodash');
-const {
+import _ from 'lodash';
+import {
   PageDetails,
   pageDetailsValidationSchema,
-} = require('../models/PageDetails');
-const { Page } = require('../models/Page');
-const { BadRequest, NotFound } = require('../utils/errors');
+} from '../models/PageDetails';
+import { Page } from '../models/Page';
+import { BadRequest, NotFound } from '../utils/errors';
 
 const hasComponentsUniqueIds = components => {
   if (!(components && components.length)) {
@@ -137,7 +137,7 @@ const deletePageDetails = async (req, res, next) => {
   }
 };
 
-module.exports = {
+export {
   getPageDetails,
   createPageDetails,
   updatePageDetails,

@@ -1,5 +1,5 @@
-const { Menu, menuValidationSchema } = require('../models/Menu');
-const { BadRequest, NotFound } = require('../utils/errors');
+import { Menu, menuValidationSchema } from '../models/Menu';
+import { BadRequest, NotFound } from '../utils/errors';
 
 const getMenus = async (req, res, next) => {
   const { menuId } = req.params;
@@ -61,9 +61,4 @@ const deleteMenu = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  getMenus,
-  createMenu,
-  updateMenu,
-  deleteMenu,
-};
+export { getMenus, createMenu, updateMenu, deleteMenu };

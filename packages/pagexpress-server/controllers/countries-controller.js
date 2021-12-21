@@ -1,5 +1,5 @@
-const { Country, countryValidationSchema } = require('../models/Country');
-const { BadRequest, NotFound } = require('../utils/errors');
+import { Country, countryValidationSchema } from '../models/Country';
+import { BadRequest, NotFound } from '../utils/errors';
 
 const getCountries = async (req, res, next) => {
   const { countryId } = req.params;
@@ -43,7 +43,10 @@ const updateCountry = async (req, res, next) => {
       throw new BadRequest(error.details[0].message);
     }
 
-    const country = await Country.findOneAndUpdate({ _id: countryId }, req.body);
+    const country = await Country.findOneAndUpdate(
+      { _id: countryId },
+      req.body
+    );
     res.json(country);
   } catch (err) {
     next(err);
@@ -61,9 +64,4 @@ const deleteCountry = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  getCountries,
-  createCountry,
-  updateCountry,
-  deleteCountry,
-};
+export { getCountries, createCountry, updateCountry, deleteCountry };

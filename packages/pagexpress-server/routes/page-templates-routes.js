@@ -1,15 +1,36 @@
-const router = require('express').Router();
-const { auth, grandAccess } = require('../middlewares');
-const {
+import { Router } from 'express';
+import { auth, grandAccess } from '../middlewares';
+import {
   getPageTemplates,
   createPageTemplate,
   updatePageTemplate,
   deletePageTemplate,
-} = require('../controllers/page-templates-controller');
+} from '../controllers/page-templates-controller';
 
-router.get('/page-templates/:pageTemplateId?', auth, grandAccess('readAny', 'pageTemplate'), getPageTemplates);
-router.post('/page-templates', auth, grandAccess('createOwn', 'pageTemplate'), createPageTemplate);
-router.put('/page-templates/:pageTemplateId', auth, grandAccess('updateAny', 'pageTemplate'), updatePageTemplate);
-router.delete('/page-templates/:pageTemplateId', auth, grandAccess('deleteAny', 'pageTemplate'), deletePageTemplate);
+const router = Router();
+router.get(
+  '/page-templates/:pageTemplateId?',
+  auth,
+  grandAccess('readAny', 'pageTemplate'),
+  getPageTemplates
+);
+router.post(
+  '/page-templates',
+  auth,
+  grandAccess('createOwn', 'pageTemplate'),
+  createPageTemplate
+);
+router.put(
+  '/page-templates/:pageTemplateId',
+  auth,
+  grandAccess('updateAny', 'pageTemplate'),
+  updatePageTemplate
+);
+router.delete(
+  '/page-templates/:pageTemplateId',
+  auth,
+  grandAccess('deleteAny', 'pageTemplate'),
+  deletePageTemplate
+);
 
-module.exports = router;
+export default router;

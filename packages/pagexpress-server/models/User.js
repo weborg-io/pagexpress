@@ -1,8 +1,8 @@
-const { Schema, model } = require('mongoose');
-const Joi = require('joi');
-const jwt = require('jsonwebtoken');
-const config = require('config');
-const roles = require('../roles/roles');
+import { Schema, model } from 'mongoose';
+import Joi from 'joi';
+import jwt from 'jsonwebtoken';
+import config from 'config';
+import roles from '../roles/roles';
 
 const userSchema = new Schema(
   {
@@ -37,8 +37,4 @@ const userValidationSchema = Joi.object({
 
 const User = model('User', userSchema);
 
-module.exports = {
-  userSchema,
-  User,
-  userValidationSchema,
-};
+export { userSchema, User, userValidationSchema };

@@ -1,7 +1,9 @@
-const { Page } = require('../models/Page');
-const { PageDetails } = require('../models/PageDetails');
-const R = require('ramda');
-const { ObjectId } = require('mongoose').Types;
+import { Page } from '/models/Page';
+import { PageDetails } from '/models/PageDetails';
+import R from 'ramda';
+import { Types } from 'mongoose';
+
+const { ObjectId } = Types;
 
 const componentUsage = async (req, res, next) => {
   const { componentId } = req.params;
@@ -39,6 +41,4 @@ const componentUsage = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  componentUsage,
-};
+export { componentUsage };

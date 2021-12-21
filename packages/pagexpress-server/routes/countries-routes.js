@@ -1,10 +1,36 @@
-const router = require('express').Router();
-const { auth, grandAccess } = require('../middlewares');
-const { getCountries, createCountry, updateCountry, deleteCountry } = require('../controllers/countries-controller');
+import { Router } from 'express';
+import { auth, grandAccess } from '../middlewares';
+import {
+  getCountries,
+  createCountry,
+  updateCountry,
+  deleteCountry,
+} from '../controllers/countries-controller';
 
-router.get('/countries/:countryId?', auth, grandAccess('readAny', 'country'), getCountries);
-router.post('/countries', auth, grandAccess('createOwn', 'country'), createCountry);
-router.put('/countries/:countryId', auth, grandAccess('updateAny', 'country'), updateCountry);
-router.delete('/countries/:countryId', auth, grandAccess('deleteAny', 'country'), deleteCountry);
+const router = Router();
+router.get(
+  '/countries/:countryId?',
+  auth,
+  grandAccess('readAny', 'country'),
+  getCountries
+);
+router.post(
+  '/countries',
+  auth,
+  grandAccess('createOwn', 'country'),
+  createCountry
+);
+router.put(
+  '/countries/:countryId',
+  auth,
+  grandAccess('updateAny', 'country'),
+  updateCountry
+);
+router.delete(
+  '/countries/:countryId',
+  auth,
+  grandAccess('deleteAny', 'country'),
+  deleteCountry
+);
 
-module.exports = router;
+export default router;

@@ -1,6 +1,8 @@
-const { Schema, model } = require('mongoose');
-const Joi = require('joi');
-Joi.objectId = require('joi-objectid')(Joi);
+import { Schema, model } from 'mongoose';
+import Joi from 'joi';
+import JoiObjectId from 'joi-objectid';
+
+Joi.objectId = JoiObjectId(Joi);
 
 const definitionValueSchema = new Schema(
   {
@@ -13,7 +15,11 @@ const definitionValueSchema = new Schema(
 
 const definitionSchema = new Schema({
   name: { type: String, require: true, unique: true, min: 3, max: 30 },
-  valueFieldType: { type: Schema.Types.ObjectId, require: true, ref: 'FieldType' },
+  valueFieldType: {
+    type: Schema.Types.ObjectId,
+    require: true,
+    ref: 'FieldType',
+  },
   defaultValue: { type: Schema.Types.Mixed, default: undefined },
   values: {
     default: [],
@@ -30,13 +36,17 @@ const definitionValueValidationSchema = Joi.object({
 const definitionValidationSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   valueFieldType: Joi.objectId().required(),
-  defaultValue: Joi.alternatives().try(Joi.string(), Joi.array(), Joi.boolean()),
+  defaultValue: Joi.alternatives().try(
+    Joi.string(),
+    Joi.array(),
+    Joi.boolean()
+  ),
   values: Joi.array().items(definitionValueValidationSchema),
 });
 
 const Definition = model('Definition', definitionSchema);
 
-module.exports = {
+export {
   definitionSchema,
   Definition,
   definitionValueValidationSchema,

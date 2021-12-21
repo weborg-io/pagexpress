@@ -1,5 +1,5 @@
-const { SiteInfo, siteInfoValidationSchema } = require('../models/SiteInfo');
-const { BadRequest } = require('../utils/errors');
+import { SiteInfo, siteInfoValidationSchema } from '../models/SiteInfo';
+import { BadRequest } from '../utils/errors';
 
 const getSiteInfo = async (req, res, next) => {
   try {
@@ -54,8 +54,4 @@ const updateSiteInfo = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  getSiteInfo,
-  createSiteInfo,
-  updateSiteInfo,
-};
+export { getSiteInfo, createSiteInfo, updateSiteInfo };

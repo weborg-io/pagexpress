@@ -1,17 +1,19 @@
-const { Schema, model } = require('mongoose');
-const {
+import { Schema, model } from 'mongoose';
+import {
   FieldsetModelSchema,
   fieldsetValidationSchema,
   ComponentPatternModelSchema,
   componentPatternValidationSchema,
-} = require('./data-schemas');
-const { fieldSchema } = require('./FieldType');
+} from './data-schemas';
+import { fieldSchema } from './FieldType';
 
 const fieldsetSchema = new Schema(FieldsetModelSchema({ fieldSchema }));
-const componentPatternSchema = new Schema(ComponentPatternModelSchema({ fieldsetSchema, fieldSchema }));
+const componentPatternSchema = new Schema(
+  ComponentPatternModelSchema({ fieldsetSchema, fieldSchema })
+);
 const ComponentPattern = model('ComponentPattern', componentPatternSchema);
 
-module.exports = {
+export {
   componentPatternSchema,
   ComponentPattern,
   fieldsetValidationSchema,

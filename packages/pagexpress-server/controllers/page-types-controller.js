@@ -1,5 +1,5 @@
-const { PageType, pageTypeValidationSchema } = require('../models/PageType');
-const { BadRequest, NotFound } = require('../utils/errors');
+import { PageType, pageTypeValidationSchema } from '../models/PageType';
+import { BadRequest, NotFound } from '../utils/errors';
 
 const getPageTypes = async (req, res, next) => {
   const { pageTypeId } = req.params;
@@ -43,7 +43,10 @@ const updatePageType = async (req, res, next) => {
       throw new BadRequest(error.details[0].message);
     }
 
-    const pageType = await PageType.findOneAndUpdate({ _id: pageTypeId }, req.body);
+    const pageType = await PageType.findOneAndUpdate(
+      { _id: pageTypeId },
+      req.body
+    );
     res.json(pageType);
   } catch (err) {
     next(err);
@@ -61,9 +64,4 @@ const deletePageType = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  getPageTypes,
-  createPageType,
-  updatePageType,
-  deletePageType,
-};
+export { getPageTypes, createPageType, updatePageType, deletePageType };

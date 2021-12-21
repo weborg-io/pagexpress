@@ -1,5 +1,5 @@
-const { Schema, model } = require('mongoose');
-const Joi = require('joi');
+import { Schema, model } from 'mongoose';
+import Joi from 'joi';
 
 const siteInfoSchema = new Schema({
   url: { type: String, require: true, max: 250 },
@@ -19,8 +19,4 @@ const siteInfoValidationSchema = Joi.object({
 
 const SiteInfo = model('SiteInfo', siteInfoSchema);
 
-module.exports = {
-  SiteInfo,
-  siteInfoSchema,
-  siteInfoValidationSchema,
-};
+export { SiteInfo, siteInfoSchema, siteInfoValidationSchema };

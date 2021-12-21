@@ -1,13 +1,19 @@
-const { Schema, model } = require('mongoose');
-const uuid = require('uuid');
-const Joi = require('joi');
-Joi.objectId = require('joi-objectid')(Joi);
+import { Schema, model } from 'mongoose';
+import uuid from 'uuid';
+import Joi from 'joi';
+import JoiObjectId from 'joi-objectid';
+
+Joi.objectId = JoiObjectId(Joi);
 
 const pageComponentSchema = new Schema({
   _id: { type: String, min: 36, max: 36, default: uuid.v4 },
   treeNodeLabel: { type: String, max: 255 },
   attributes: { type: Object },
-  componentPatternId: { type: Schema.Types.ObjectId, required: true, ref: 'ComponentPattern' },
+  componentPatternId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'ComponentPattern',
+  },
   data: { type: Object },
   parentComponentId: { type: String, min: 36, max: 36 },
 });
@@ -51,7 +57,7 @@ const pageDetailsValidationSchema = Joi.object({
 
 const PageDetails = model('PageDetails', pageDetailsSchema);
 
-module.exports = {
+export {
   pageComponentSchema,
   pageDetailsSchema,
   pageComponentValidationSchema,

@@ -1,5 +1,5 @@
-const path = require('path');
-const Server = require('./server');
+import path from 'path';
+import Server from './server.js';
 
 class ServerConnector {
   constructor() {
@@ -32,4 +32,4 @@ class ServerConnector {
   }
 }
 
-module.exports = ServerConnector;
+export default ServerConnector;

@@ -1,7 +1,4 @@
-const Server = require('./server');
-const ServerConnector = require('./server-connector');
+import Server from './server.js';
+import ServerConnector from './server-connector.js';
 
-module.exports = {
-  Server,
-  ServerConnector,
-};
+export { Server, ServerConnector };

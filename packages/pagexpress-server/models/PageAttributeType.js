@@ -1,5 +1,5 @@
-const { Schema, model } = require('mongoose');
-const Joi = require('joi');
+import { Schema, model } from 'mongoose';
+import Joi from 'joi';
 
 const pageTypeAttributeSchema = new Schema({
   type: { type: String, require: true, min: 3, max: 30 },
@@ -11,7 +11,7 @@ const pageTypeAttributeValidationSchema = Joi.object({
 
 const PageAttributeType = model('PageAttributeType', pageTypeAttributeSchema);
 
-module.exports = {
+export {
   pageTypeAttributeSchema,
   PageAttributeType,
   pageTypeAttributeValidationSchema,

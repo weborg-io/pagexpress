@@ -3,6 +3,7 @@
   "version": "0.11.0",
   "description": "Open Source NodeJS headless CMS API server",
   "main": "modules/index.js",
+  "type": "module",
   "scripts": {
     "dev": "NODE_PATH=. nodemon ./run/server-api.js",
     "start": "NODE_PATH=. NODE_ENV=production node ./run/server-api.js",

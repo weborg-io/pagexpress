@@ -1,6 +1,8 @@
-const { Schema, model } = require('mongoose');
-const Joi = require('joi');
-Joi.objectId = require('joi-objectid')(Joi);
+import { Schema, model } from 'mongoose';
+import Joi from 'joi';
+import JoiObjectId from 'joi-objectid';
+
+Joi.objectId = JoiObjectId(Joi);
 
 const fieldSchema = new Schema({
   name: { type: String, require: true, min: 3, max: 30 },
@@ -35,7 +37,7 @@ const fieldTypeValidationSchema = Joi.object({
 
 const FieldType = model('FieldType', fieldTypeSchema);
 
-module.exports = {
+export {
   fieldTypeSchema,
   fieldSchema,
   FieldType,
