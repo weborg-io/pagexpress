@@ -1,7 +1,8 @@
-import { Schema } from 'mongoose';
+import Mongoose from 'mongoose';
 import Joi from 'joi';
 import JoiObjectId from 'joi-objectid';
 
+const { Schema } = Mongoose;
 Joi.objectId = JoiObjectId(Joi);
 
 const FieldOptionModelSchema = () => ({
