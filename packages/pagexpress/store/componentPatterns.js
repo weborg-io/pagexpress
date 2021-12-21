@@ -6,7 +6,7 @@ import {
   FieldModelSchema,
   FieldOptionModelSchema,
   FieldsetModelSchema,
-} from '@weborg-io/pagexpress-server/models/data-schemas';
+} from '@weborg-io/pagexpress-server/models/data-schemas/index.mjs';
 import { reorderItems, showRequestResult } from '@/utils';
 
 const FIELD_ATTRIBUTES = ['min', 'max', 'required', 'default'];
