@@ -35,6 +35,10 @@ class Server {
     require('../routes')(this.app);
   }
 
+  initModules() {
+    require('../modules')(this.app);
+  }
+
   initErrorHandler() {
     this.app.use(errorHandler);
   }
@@ -57,6 +61,7 @@ class Server {
     this.initDb();
     this.initSocketIo();
     this.initRouting();
+    this.initModules();
     this.initErrorHandler();
   }
 

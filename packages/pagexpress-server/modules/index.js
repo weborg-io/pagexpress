@@ -1,7 +1,5 @@
-const Server = require('./server');
-const ServerConnector = require('./server-connector');
+const media = require('./media');
 
-module.exports = {
-  Server,
-  ServerConnector,
+module.exports = app => {
+  app.use('/v1', media);
 };
