@@ -42,6 +42,10 @@ export const mutations = {
     }
   },
 
+  UPDATE_VERSION(state, version) {
+    state.pageDetails = { ...state.pageDetails, version };
+  },
+
   ADD_PAGE(state, newPageId) {
     state.newPageId = newPageId;
   },
@@ -112,6 +116,10 @@ export const actions = {
       });
 
       savedAllData = !!saveDetailsResult;
+
+      if (saveDetailsResult) {
+        commit('UPDATE_VERSION', saveDetailsResult.version);
+      }
     }
 
     if (savedAllData) {

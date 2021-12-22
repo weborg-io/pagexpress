@@ -112,7 +112,7 @@ const updatePageDetails = async (req, res, next) => {
 
     const pageDetails = await PageDetails.findById(pageDetailsId);
 
-    if (!version || version !== pageDetails.version) {
+    if (version !== pageDetails.version) {
       throw new BadRequest(
         'Version is not recent one, please update page data and try again'
       );
