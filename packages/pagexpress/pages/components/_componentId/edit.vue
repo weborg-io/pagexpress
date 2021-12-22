@@ -1,5 +1,5 @@
 <template>
-  <div class="component-add">
+  <div v-if="modelSchemas" class="component-add">
     <Toolbar>
       <template #left>
         <button class="button is-info" @click="addField">Add field +</button>
@@ -234,6 +234,7 @@ export default {
       'componentPatternFieldset',
       'fieldTypes',
       'unsavedState',
+      'modelSchemas',
     ]),
 
     ...mapState({

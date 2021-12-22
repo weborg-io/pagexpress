@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { auth, grandAccess } = require('../middlewares');
 
 const {
+  getComponentPatternSchema,
   getComponentPatterns,
   createComponentPattern,
   updateComponentPattern,
@@ -9,12 +10,23 @@ const {
 } = require('../controllers/component-patterns-controller');
 
 router.get(
+  '/component-patterns/schema',
+  auth,
+  grandAccess('readAny', 'componentPattern'),
+  getComponentPatternSchema
+);
+router.get(
   '/component-patterns/:componentPatternId?',
   auth,
   grandAccess('readAny', 'componentPattern'),
   getComponentPatterns
 );
-router.post('/component-patterns', auth, grandAccess('createOwn', 'componentPattern'), createComponentPattern);
+router.post(
+  '/component-patterns',
+  auth,
+  grandAccess('createOwn', 'componentPattern'),
+  createComponentPattern
+);
 router.put(
   '/component-patterns/:componentPatternId',
   auth,
