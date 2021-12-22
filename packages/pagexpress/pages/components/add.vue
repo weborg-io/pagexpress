@@ -1,17 +1,15 @@
 <template>
-  <div class="component-add">
+  <div v-if="modelSchemas" class="component-add">
     <Toolbar>
-      <template v-slot:left>
-        <button class="button is-info" @click="addField">
-          Add field +
-        </button>
+      <template #left>
+        <button class="button is-info" @click="addField">Add field +</button>
 
         <button class="button is-info" @click="addFieldset">
           Add fieldset +
         </button>
       </template>
 
-      <template v-slot:right>
+      <template #right>
         <button class="button is-success" @click="createComponent">
           Create component
         </button>
@@ -178,11 +176,12 @@ export default {
       'randomId',
     ]),
     ...mapState('componentPatterns', [
-      'componentPatternMainData',
+      'componentId',
       'componentPatternFields',
       'componentPatternFieldset',
+      'componentPatternMainData',
       'fieldTypes',
-      'componentId',
+      'modelSchemas',
     ]),
   },
 

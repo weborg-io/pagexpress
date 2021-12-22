@@ -1,12 +1,6 @@
 import _omit from 'lodash/omit';
 import Vue from 'vue';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  ComponentPatternModelSchema,
-  FieldModelSchema,
-  FieldOptionModelSchema,
-  FieldsetModelSchema,
-} from '@weborg-io/pagexpress-server/models/data-schemas/index.mjs';
 import { reorderItems, showRequestResult } from '@/utils';
 
 const FIELD_ATTRIBUTES = ['min', 'max', 'required', 'default'];
@@ -18,12 +12,7 @@ export const state = () => ({
   componentPatternFields: null,
   componentPatternFieldset: null,
   currentPage: 1,
-  modelSchemas: {
-    componentPattern: ComponentPatternModelSchema(),
-    field: FieldModelSchema(),
-    fieldOption: FieldOptionModelSchema(),
-    fieldset: FieldsetModelSchema(),
-  },
+  modelSchemas: null,
   fieldTypes: null,
   definitions: null,
   unsavedState: false,
@@ -241,6 +230,23 @@ export const mutations = {
     state.itemsPerPage = itemsPerPage;
   },
 
+  LOAD_COMPONENT_PATTERN_SCHEMA(
+    state,
+    {
+      componentPatternModelSchema,
+      fieldModelSchema,
+      fieldOptionModelSchema,
+      fieldsetModelSchema,
+    }
+  ) {
+    state.modelSchemas = {
+      componentPattern: componentPatternModelSchema,
+      field: fieldModelSchema,
+      fieldOption: fieldOptionModelSchema,
+      fieldset: fieldsetModelSchema,
+    };
+  },
+
   LOAD_SINGLE_PATTERN(state, { _id, fields, fieldset, ...mainData }) {
     state.componentPatternMainData = _omit(mainData, ['_id', '__v']);
     state.componentPatternFields = fields
@@ -363,6 +369,7 @@ export const actions = {
   },
 
   async loadFieldsData({ commit, dispatch, rootState }) {
+    const { data } = await this.$axios.get('/component-patterns/schema');
     await dispatch(
       'definitions/fetchDefinitions',
       {},
@@ -378,6 +385,7 @@ export const actions = {
       }
     );
 
+    commit('LOAD_COMPONENT_PATTERN_SCHEMA', data);
     commit('LOAD_FIELDS_DATA', {
       definitions: rootState.definitions.definitions,
       fieldTypes: rootState.fieldTypes.types,
