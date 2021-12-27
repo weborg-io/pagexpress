@@ -36,7 +36,7 @@ class Server {
   }
 
   initModules() {
-    require('../modules')(this.app);
+    require('../modules')(this.app, { apiRootPath: '/v1' });
   }
 
   initErrorHandler() {

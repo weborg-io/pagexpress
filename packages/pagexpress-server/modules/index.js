@@ -1,5 +1,5 @@
-const media = require('./media');
+const { router, config } = require('./media');
 
-module.exports = app => {
-  app.use('/v1', media);
+module.exports = (app, { apiRootPath }) => {
+  app.use(`${apiRootPath}${config.moduleApiBasePath}`, router);
 };

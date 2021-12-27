@@ -1,8 +1,11 @@
-const AWS = require('aws-sdk');
+const fs = require('fs');
 const multer = require('multer');
-const multerS3 = require('multer-s3');
 const path = require('path');
-const s3 = require('../tools/s3');
+const { imageDimensions, s3 } = require('../tools');
+
+const getFileName = () =>
+  `${process.env.AWS_ROOT_FOLDER}/${Date.now().toString()}`;
+const tempUploadFolder = path.resolve(__dirname, '../../../', 'tmp/uploads');
 
 const checkFileType = (file, cb) => {
   const filetypes = /jpeg|jpg|png|svg|webp|gif/;
@@ -18,28 +21,71 @@ const checkFileType = (file, cb) => {
 
 const fileStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.resolve(__dirname, '../../../', 'static/uploads'));
+    cb(null, tempUploadFolder);
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
 });
 
-const awsStorage = multerS3({
-  s3,
-  // bucket: process.env.BUCKET_NAME,
-  bucket: 'pagexpress-dev/media/',
-  key: function (req, file, cb) {
-    cb(null, Date.now().toString());
-  },
-});
-
-const upload = multer({
-  storage: process.env.AWS_BUCKET_NAME ? awsStorage() : fileStorage,
+const uploadTemp = multer({
+  storage: fileStorage,
   limits: { fileSize: 8000000 },
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   },
 });
 
-module.export = upload;
+const getS3Params = file => {
+  const fileStream = fs.createReadStream(file.path);
+
+  return {
+    ContentType: file.mimetype,
+    Bucket: process.env.AWS_S3_BUCKET,
+    Key: getFileName(),
+    Body: fileStream,
+  };
+};
+
+/**
+ * @param file
+ * @returns {Promise<object>}
+ */
+const uploadFileToS3 = async file => {
+  const uploadParams = getS3Params(file);
+
+  try {
+    await s3
+      .upload(uploadParams, err => {
+        if (err) {
+          throw new Error(err);
+        }
+      })
+      .promise();
+
+    const { width, height } = await imageDimensions(file.path);
+    fs.unlink(file.path, err => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+    return {
+      name: file.originalname,
+      mimetype: file.mimetype,
+      width,
+      height,
+      size: file.size,
+      key: uploadParams.Key,
+    };
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+module.exports = {
+  getFileName,
+  tempUploadFolder,
+  uploadFileToS3,
+  uploadTemp,
+};

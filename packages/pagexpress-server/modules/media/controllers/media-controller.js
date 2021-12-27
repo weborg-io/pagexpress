@@ -1,28 +1,90 @@
-const multer = require('multer');
-const s3 = require('../tools/s3');
+const { Media } = require('../models/Media');
+const { s3 } = require('../tools');
 const { BadRequest } = require('../../../utils/errors');
+const { uploadFileToS3 } = require('./upload');
+const ListFeatures = require('../../../utils/ListFeatures');
 
-const getObject = async (req, res, next) => {
-  const { objectKey } = req.params;
-
-  if (!objectKey) {
-    next(new BadRequest('Object key not provided'));
-  }
+const sendImage = async (req, res, next) => {
+  const { mediaId } = req.params;
 
   try {
-    const data = await s3
+    const media = await Media.findById(mediaId);
+
+    if (!media) {
+      return next(new BadRequest('Media object not exists'));
+    }
+
+    const imageStream = s3
       .getObject({
         Bucket: process.env.AWS_S3_BUCKET,
-        Key: `media/${objectKey}`,
+        Key: media.key,
       })
-      .promise();
+      .createReadStream();
 
-    res.json(data);
-  } catch (error) {
-    next(error);
+    if (!imageStream) {
+      return next(new BadRequest('Unexpected server issues'));
+    }
+    imageStream.pipe(res);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getMedia = async (req, res, next) => {
+  const { mediaId } = req.params;
+
+  try {
+    if (mediaId) {
+      const media = await Media.findById(mediaId);
+      res.json(media);
+
+      return;
+    }
+
+    const sortableFields = ['name', 'mimetype', 'createdAt', 'updatedAt'];
+    const listFeatures = new ListFeatures(Media, req.query, 'name');
+    const { currentPage, itemsPerPage, limit, skip, totalPages } =
+      await listFeatures.getPaginationParameters();
+    const sortBy = listFeatures.getSort(sortableFields);
+    const queryFilter = listFeatures.getQueryFilter();
+
+    const data = await Media.find(queryFilter)
+      .sort(sortBy)
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    res.json({
+      currentPage,
+      data,
+      itemsPerPage,
+      totalPages,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const uploadImages = async (req, res, next) => {
+  const { files } = req;
+
+  try {
+    const filesData = await Promise.all(files.map(uploadFileToS3));
+    const mediaObjects = await Promise.all(
+      filesData.map(singleFileData => {
+        const media = new Media(singleFileData);
+        media.url = `/v1/media/image/${media._id}`;
+        return media.save();
+      })
+    );
+    res.json(mediaObjects);
+  } catch (err) {
+    next(err);
   }
 };
 
 module.exports = {
-  getObject,
+  getMedia,
+  sendImage,
+  uploadImages,
 };

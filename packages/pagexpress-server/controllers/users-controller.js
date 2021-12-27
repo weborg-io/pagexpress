@@ -63,7 +63,11 @@ const resetPassword = async (req, res, next) => {
   try {
     const user = await User.findById(userId);
 
-    const { error } = userValidationSchema.validate({ username: user.username, email: user.email, password });
+    const { error } = userValidationSchema.validate({
+      username: user.username,
+      email: user.email,
+      password,
+    });
 
     if (error) {
       throw new BadRequest(error.details[0].message);

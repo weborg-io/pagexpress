@@ -1,12 +1,24 @@
 const router = require('express').Router();
+const config = require('./config.json');
 const { auth, grandAccess } = require('../../middlewares');
-const { getObject } = require('./controllers/media-controller');
+const {
+  sendImage,
+  getMedia,
+  uploadImages,
+} = require('./controllers/media-controller');
+const { uploadTemp } = require('./controllers/upload');
 
-router.get(
-  '/media/:objectKey',
+router.get('/image/:mediaId', auth, grandAccess('readAny', 'media'), sendImage);
+router.get('/:mediaId?', auth, grandAccess('readAny', 'media'), getMedia);
+router.post(
+  '/image/upload',
   auth,
-  grandAccess('readAny', 'media'),
-  getObject
+  grandAccess('createOwn', 'media'),
+  uploadTemp.array('images'),
+  uploadImages
 );
 
-module.exports = router;
+module.exports = {
+  router,
+  config,
+};
