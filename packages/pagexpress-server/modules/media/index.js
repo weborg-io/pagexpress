@@ -1,34 +1,32 @@
 const router = require('express').Router();
 const defaultModuleConfig = require('./config');
 const MediaController = require('./controllers/media-controller');
-const { uploadTemp } = require('./controllers/upload');
+const { localUpload } = require('./controllers/local-upload');
 
-module.exports = (accessMiddlewares, customModuleConfig = {}) => {
+module.exports = (accessMiddlewares, pxConfig = {}) => {
   const mediaModuleConfig = {
     ...defaultModuleConfig,
-    ...customModuleConfig,
+    ...pxConfig.media,
   };
   const { auth, grandAccess } = accessMiddlewares;
-  const { getImage, getMedia, uploadImages } = mediaModuleConfig.routes;
-  const mediaController = new MediaController(mediaModuleConfig);
+  const { resourceName, tempUploadFolder, routes } = mediaModuleConfig;
+  const mediaController = new MediaController(mediaModuleConfig, {
+    ...pxConfig,
+    media: undefined,
+  });
 
+  router.get(routes.getImage, mediaController.getImage);
   router.get(
-    getImage,
+    routes.getMedia,
     auth,
-    grandAccess('readAny', mediaModuleConfig.resourceName),
-    mediaController.getImage
-  );
-  router.get(
-    getMedia,
-    auth,
-    grandAccess('readAny', mediaModuleConfig.resourceName),
+    grandAccess('readAny', resourceName),
     mediaController.getMedia
   );
   router.post(
-    uploadImages,
+    routes.uploadImages,
     auth,
-    grandAccess('createOwn', mediaModuleConfig.resourceName),
-    uploadTemp.array('images'),
+    grandAccess('createOwn', resourceName),
+    localUpload(tempUploadFolder).array('images'),
     mediaController.uploadImages
   );
 

@@ -1,12 +1,19 @@
 const { Media } = require('../models/Media');
-const { s3 } = require('../tools');
+const { removeTempFile } = require('./local-upload');
 const { BadRequest } = require('../../../utils/errors');
-const { uploadFileToS3 } = require('./upload');
+const { S3Connector, s3CommonUtils, s3 } = require('../s3');
+const { image } = require('../tools');
 const ListFeatures = require('../../../utils/ListFeatures');
 
 class MediaController {
-  constructor(moduleConfig) {
-    this.config = moduleConfig;
+  constructor(moduleConfig, pxConfig) {
+    this.mediaConfig = moduleConfig;
+    this.appConfig = pxConfig;
+    this.utils = s3CommonUtils(moduleConfig);
+    this.s3Connector = new S3Connector(moduleConfig);
+    this.getImage = this.getImage.bind(this);
+    this.getMedia = this.getMedia.bind(this);
+    this.uploadImages = this.uploadImages.bind(this);
   }
 
   async getImage(req, res, next) {
@@ -71,19 +78,43 @@ class MediaController {
     }
   }
 
+  getImageUrl(mediaId) {
+    const { apiBaseUrl } = this.appConfig;
+    const { mediaApiBasePath, routes } = this.mediaConfig;
+    const imageEndpoint = routes.getImage.split(':').shift();
+
+    return `${apiBaseUrl}${mediaApiBasePath}${imageEndpoint}${mediaId}`;
+  }
+
   async uploadImages(req, res, next) {
     const { files } = req;
 
     try {
-      const filesData = await Promise.all(files.map(uploadFileToS3));
       const mediaObjects = await Promise.all(
-        filesData.map(singleFileData => {
-          const media = new Media(singleFileData);
-          media.url = `/v1/media/image/${media._id}`;
-          return media.save();
+        files.map(file => {
+          const media = new Media({
+            name: file.originalname,
+            mimetype: file.mimetype,
+            size: file.size,
+          });
+          const targetKey = this.utils.getMediaKey(media._id);
+
+          return this.s3Connector
+            .upload(media._id, file, targetKey)
+            .then(() => image.getMetadata(file.path))
+            .then(({ width, height }) => {
+              media.url = this.getImageUrl(media._id);
+              media.key = targetKey;
+              media.width = width;
+              media.height = height;
+
+              return media.save();
+            });
         })
       );
+
       res.json(mediaObjects);
+      files.forEach(file => removeTempFile(file.path));
     } catch (err) {
       next(err);
     }

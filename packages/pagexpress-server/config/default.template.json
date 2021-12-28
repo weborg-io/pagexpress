@@ -9,6 +9,7 @@
   },
   "server": {
     "host": "",
-    "port": ""
+    "port": "",
+    "origin": ""
   }
 }

@@ -8,8 +8,9 @@ const { errorHandler } = middlewares;
 /**
  * @typedef ServerConfig
  *
- * @property {string} object
- * @property {string} server
+ * @property {object} mongodb
+ * @property {object} server
+ * @property {object} client
  */
 
 class Server {
@@ -25,7 +26,12 @@ class Server {
     this.app = express();
     this.app.use(bodyParser.json({ limit: '50mb' }));
     this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: this.config.client.origin,
+        optionsSuccessStatus: 200,
+      })
+    );
     this.server = require('http').createServer(this.app);
   }
 
