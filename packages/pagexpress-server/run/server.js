@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const errorHandler = require('../middlewares/error-handler');
+const middlewares = require('../middlewares');
+const pxConfig = require('../px-config');
+const { errorHandler } = middlewares;
 
 /**
  * @typedef ServerConfig
@@ -36,7 +38,7 @@ class Server {
   }
 
   initModules() {
-    require('../modules')(this.app, { apiRootPath: '/v1' });
+    require('../modules')(this.app, middlewares, pxConfig);
   }
 
   initErrorHandler() {

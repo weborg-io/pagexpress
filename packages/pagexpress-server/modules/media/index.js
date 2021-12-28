@@ -1,24 +1,39 @@
 const router = require('express').Router();
-const config = require('./config.json');
-const { auth, grandAccess } = require('../../middlewares');
-const {
-  sendImage,
-  getMedia,
-  uploadImages,
-} = require('./controllers/media-controller');
+const defaultModuleConfig = require('./config');
+const MediaController = require('./controllers/media-controller');
 const { uploadTemp } = require('./controllers/upload');
 
-router.get('/image/:mediaId', auth, grandAccess('readAny', 'media'), sendImage);
-router.get('/:mediaId?', auth, grandAccess('readAny', 'media'), getMedia);
-router.post(
-  '/image/upload',
-  auth,
-  grandAccess('createOwn', 'media'),
-  uploadTemp.array('images'),
-  uploadImages
-);
+module.exports = (accessMiddlewares, customModuleConfig = {}) => {
+  const mediaModuleConfig = {
+    ...defaultModuleConfig,
+    ...customModuleConfig,
+  };
+  const { auth, grandAccess } = accessMiddlewares;
+  const { getImage, getMedia, uploadImages } = mediaModuleConfig.routes;
+  const mediaController = new MediaController(mediaModuleConfig);
 
-module.exports = {
-  router,
-  config,
+  router.get(
+    getImage,
+    auth,
+    grandAccess('readAny', mediaModuleConfig.resourceName),
+    mediaController.getImage
+  );
+  router.get(
+    getMedia,
+    auth,
+    grandAccess('readAny', mediaModuleConfig.resourceName),
+    mediaController.getMedia
+  );
+  router.post(
+    uploadImages,
+    auth,
+    grandAccess('createOwn', mediaModuleConfig.resourceName),
+    uploadTemp.array('images'),
+    mediaController.uploadImages
+  );
+
+  return {
+    router,
+    mediaModuleConfig,
+  };
 };
