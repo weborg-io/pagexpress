@@ -1,24 +1,77 @@
 const fs = require('fs');
+const path = require('path');
 const s3 = require('./aws-s3');
+const { image } = require('../tools');
+const s3CommonUtils = require('./s3-common-utils');
 
 class S3Connector {
   constructor(config) {
     this.config = config;
+    this.utils = s3CommonUtils(config);
   }
 
-  getS3Params(file, targetKey) {
-    const fileStream = fs.createReadStream(file.path);
-
+  getS3Params(bufferImageObject, targetKey) {
     return {
-      ContentType: file.mimetype,
+      ContentType: `image/${bufferImageObject.format}`,
       Bucket: this.config.s3Bucket,
       Key: targetKey || Date.now().toString(),
-      Body: fileStream,
+      Body: bufferImageObject.data,
     };
   }
 
-  async upload(mediaId, file, targetKey) {
-    const uploadParams = this.getS3Params(file, targetKey);
+  /**
+   *
+   * @param params
+   * @returns {Promise<null|Request<S3.GetObjectOutput, AWSError>>}
+   */
+  async getObjectIfExists(params) {
+    try {
+      await s3.headObject(params).promise();
+
+      return s3.getObject(params);
+    } catch (headErr) {
+      if (headErr.code === 'NotFound') {
+        return null;
+      }
+    }
+  }
+
+  /*
+  TODO: create get image from s3 flow with params
+  - Requested image exists in s3: return image
+  - Not exists: create new image version from original (without params) image
+      target key should use params to generate proper folder for variant then return image stream
+   */
+  async getImageVersion(mediaId, options) {
+    const targetKey = this.utils.getMediaKey(mediaId, options);
+    const requestedImage = await this.getObjectIfExists({
+      Bucket: this.config.s3Bucket,
+      Key: targetKey,
+    });
+
+    if (requestedImage) {
+      return requestedImage.createReadStream();
+    }
+
+    const originImageKey = this.utils.getMediaKey(mediaId);
+    const originImage = await this.getObjectIfExists({
+      Bucket: this.config.s3Bucket,
+      Key: originImageKey,
+    });
+
+    if (!originImage) {
+      return null;
+    }
+
+    const tranformer = image.getImageTransformer(options);
+    const imageStream = originImage.createReadStream().pipe(tranformer);
+    await this.upload({ data: imageStream }, targetKey);
+
+    return imageStream;
+  }
+
+  async upload(bufferImageObject, targetKey) {
+    const uploadParams = this.getS3Params(bufferImageObject, targetKey);
 
     try {
       await s3

@@ -12,7 +12,6 @@ const MediaSchema = new Schema(
     height: { type: Number, require: true },
     size: { type: Number, require: true },
     mimetype: { type: String, require: true, enum: ALLOW_CONTENT_TYPES },
-    key: { type: String, require: true, max: 1024 },
     url: { type: String, required: true, max: 1024 },
   },
   {
@@ -29,7 +28,6 @@ const mediaValidationSchema = Joi.object({
   type: Joi.string()
     .required()
     .valid(`"${ALLOW_CONTENT_TYPES.join('","')}"`),
-  key: Joi.string().required().max(1024),
   url: Joi.string().required().max(1024),
 });
 

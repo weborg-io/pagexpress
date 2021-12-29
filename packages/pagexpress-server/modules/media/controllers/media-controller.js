@@ -1,7 +1,8 @@
+const path = require('path');
 const { Media } = require('../models/Media');
 const { removeTempFile } = require('./local-upload');
 const { BadRequest } = require('../../../utils/errors');
-const { S3Connector, s3CommonUtils, s3 } = require('../s3');
+const { S3Connector, s3CommonUtils } = require('../s3');
 const { image } = require('../tools');
 const ListFeatures = require('../../../utils/ListFeatures');
 
@@ -14,6 +15,7 @@ class MediaController {
     this.getImage = this.getImage.bind(this);
     this.getMedia = this.getMedia.bind(this);
     this.uploadImages = this.uploadImages.bind(this);
+    this.uploadSingleImage = this.uploadSingleImage.bind(this);
   }
 
   async getImage(req, res, next) {
@@ -26,18 +28,14 @@ class MediaController {
         return next(new BadRequest('Media object not exists'));
       }
 
-      const imageStream = s3
-        .getObject({
-          Bucket: process.env.AWS_S3_BUCKET,
-          Key: media.key,
-        })
-        .createReadStream();
+      const imageStream = await this.s3Connector.getImageVersion(
+        mediaId,
+        req.query
+      );
 
-      if (!imageStream) {
-        return next(new BadRequest('Image is not available'));
-      }
-
-      imageStream.pipe(res);
+      return imageStream
+        ? imageStream.pipe(res)
+        : next(new BadRequest('Image is not available'));
     } catch (err) {
       next(err);
     }
@@ -86,32 +84,47 @@ class MediaController {
     return `${apiBaseUrl}${mediaApiBasePath}${imageEndpoint}${mediaId}`;
   }
 
+  async uploadSingleImage(mediaId, file) {
+    const { defaultImageFormat, maxWidth, maxHeight } = this.mediaConfig;
+    try {
+      const targetKey = this.utils.getMediaKey(mediaId);
+      const imageBufferWithInfo = await image.process(file.path, {
+        format: defaultImageFormat,
+        width: maxWidth,
+        height: maxHeight,
+      });
+      await this.s3Connector.upload(imageBufferWithInfo, targetKey);
+
+      return {
+        ...imageBufferWithInfo.info,
+        targetKey,
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   async uploadImages(req, res, next) {
     const { files } = req;
 
     try {
-      const mediaObjects = await Promise.all(
-        files.map(file => {
-          const media = new Media({
-            name: file.originalname,
-            mimetype: file.mimetype,
-            size: file.size,
-          });
-          const targetKey = this.utils.getMediaKey(media._id);
+      const imagesUploadPromises = files.map(async file => {
+        const media = new Media({
+          name: path.parse(file.originalname).name,
+        });
+        const { width, height, format } = await this.uploadSingleImage(
+          media._id,
+          file
+        );
+        media.mimetype = `image/${format}`;
+        media.size = file.size;
+        media.url = this.getImageUrl(media._id);
+        media.width = width;
+        media.height = height;
 
-          return this.s3Connector
-            .upload(media._id, file, targetKey)
-            .then(() => image.getMetadata(file.path))
-            .then(({ width, height }) => {
-              media.url = this.getImageUrl(media._id);
-              media.key = targetKey;
-              media.width = width;
-              media.height = height;
-
-              return media.save();
-            });
-        })
-      );
+        return media.save();
+      });
+      const mediaObjects = await Promise.all(imagesUploadPromises);
 
       res.json(mediaObjects);
       files.forEach(file => removeTempFile(file.path));
