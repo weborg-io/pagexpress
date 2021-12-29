@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const s3 = require('./aws-s3');
 const { image } = require('../tools');
 const s3CommonUtils = require('./s3-common-utils');
@@ -63,8 +61,8 @@ class S3Connector {
       return null;
     }
 
-    const tranformer = image.getImageTransformer(options);
-    const imageStream = originImage.createReadStream().pipe(tranformer);
+    const transformer = image.getImageTransformer(options);
+    const imageStream = originImage.createReadStream().pipe(transformer);
     await this.upload({ data: imageStream }, targetKey);
 
     return imageStream;
