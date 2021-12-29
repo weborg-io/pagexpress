@@ -34,11 +34,10 @@ class S3Connector {
     }
   }
 
-  /*
-  TODO: create get image from s3 flow with params
-  - Requested image exists in s3: return image
-  - Not exists: create new image version from original (without params) image
-      target key should use params to generate proper folder for variant then return image stream
+  /**
+   * @param {string} mediaId
+   * @param {object} options
+   * @returns {Promise<null|stream.Readable|Sharp>}
    */
   async getImageVersion(mediaId, options) {
     const targetKey = this.utils.getMediaKey(mediaId, options);
