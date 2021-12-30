@@ -14,7 +14,6 @@ class S3Connector {
       Bucket: this.config.aws.s3Bucket,
       Key: targetKey || Date.now().toString(),
       Body: bufferImageObject.data,
-      // ACL: 'public-read',
     };
   }
 
