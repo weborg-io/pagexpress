@@ -13,6 +13,7 @@ const rootPath = path.resolve(__dirname, '../');
  * @property {object} mongodb
  * @property {object} server
  * @property {object} client
+ * @property {array} whiteListDomains
  */
 
 class Server {
@@ -30,7 +31,10 @@ class Server {
     this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
     this.app.use(
       cors({
-        origin: this.config.client.origin,
+        origin: [
+          ...this.config.whiteListDomains.split(','),
+          this.config.client.origin,
+        ],
         optionsSuccessStatus: 200,
       })
     );
@@ -66,7 +70,7 @@ class Server {
   initSocketIo() {
     const io = require('socket.io')(this.server, {
       cors: {
-        origin: process.env.CLIENT_APP_URL,
+        origin: this.config.client.origin,
         methods: ['GET', 'POST'],
       },
       transports: ['websocket'],

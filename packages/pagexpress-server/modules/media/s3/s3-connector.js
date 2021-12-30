@@ -1,4 +1,3 @@
-const s3 = require('./aws-s3');
 const { image } = require('../tools');
 const s3CommonUtils = require('./s3-common-utils');
 
@@ -6,12 +5,13 @@ class S3Connector {
   constructor(config) {
     this.config = config;
     this.utils = s3CommonUtils(config);
+    this.s3 = require('./aws-s3')(config.aws);
   }
 
   getS3Params(bufferImageObject, targetKey) {
     return {
       ContentType: `image/${bufferImageObject.info.format}`,
-      Bucket: this.config.s3Bucket,
+      Bucket: this.config.aws.s3Bucket,
       Key: targetKey || Date.now().toString(),
       Body: bufferImageObject.data,
       // ACL: 'public-read',
@@ -25,9 +25,9 @@ class S3Connector {
    */
   async getObjectIfExists(params) {
     try {
-      await s3.headObject(params).promise();
+      await this.s3.headObject(params).promise();
 
-      return s3.getObject(params);
+      return this.s3.getObject(params);
     } catch (headErr) {
       if (headErr.code === 'NotFound') {
         return null;
@@ -56,7 +56,7 @@ class S3Connector {
     const targetKey = this.utils.getMediaKey(mediaId, options);
     const format = options.format || this.config.defaultImageFormat;
     await this.upload({ data: imageStream, info: { format } }, targetKey);
-    return s3.getObject({
+    return this.s3.getObject({
       Bucket: this.config.s3Bucket,
       Key: targetKey,
     });
@@ -65,7 +65,7 @@ class S3Connector {
   async upload(bufferImageObject, targetKey) {
     const uploadParams = this.getS3Params(bufferImageObject, targetKey);
     try {
-      await s3
+      await this.s3
         .upload(uploadParams, err => {
           if (err) {
             throw new Error(err);
@@ -84,8 +84,8 @@ class S3Connector {
         Bucket: this.config.s3Bucket,
         Key: objectKey,
       };
-      await s3.headObject(params).promise();
-      await s3.deleteObject(params).promise();
+      await this.s3.headObject(params).promise();
+      await this.s3.deleteObject(params).promise();
 
       return objectKey;
     } catch (err) {

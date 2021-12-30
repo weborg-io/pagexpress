@@ -11,5 +11,16 @@
     "host": "",
     "port": "",
     "origin": ""
-  }
+  },
+  "client": {
+    "origin": ""
+  },
+  "aws": {
+    "accessKeyId": "",
+    "secretAccessKey": "",
+    "region": "",
+    "s3Bucket": "",
+    "s3RootFolder": ""
+  },
+  "whiteListDomains": ""
 }

@@ -1,9 +1,5 @@
 const path = require('path');
-const {
-  Media,
-  mediaValidationSchema,
-  updateMediaValidationSchema,
-} = require('../models/Media');
+const { Media, updateMediaValidationSchema } = require('../models/Media');
 const { removeTempFile } = require('../local/local-upload');
 const { BadRequest } = require('../../../utils/errors');
 const { S3Connector, s3CommonUtils } = require('../s3');

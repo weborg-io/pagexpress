@@ -5,7 +5,7 @@ class S3CommonUtils {
 
   getMediaKey(mediaId, { width, height, format } = {}) {
     let internalPath = '/';
-    const { defaultImageFormat, s3RootFolder } = this.config;
+    const { defaultImageFormat, aws } = this.config;
     const targetFormat = format || defaultImageFormat;
 
     if (width || height) {
@@ -13,7 +13,7 @@ class S3CommonUtils {
       internalPath += `${height || 'auto'}/`;
     }
 
-    return `${s3RootFolder}${internalPath}${mediaId}_${targetFormat}`;
+    return `${aws.s3RootFolder}${internalPath}${mediaId}_${targetFormat}`;
   }
 }
 

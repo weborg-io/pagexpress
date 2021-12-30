@@ -1,8 +1,10 @@
+const config = require('config');
+
 module.exports = {
-  apiRootPath: process.env.API_BASE_PATH,
-  apiBaseUrl: `${process.env.SERVER_APP_URL}${process.env.API_BASE_PATH}`,
+  apiRootPath: '/v1',
+  apiBaseUrl: `${config.get('server').origin}/v1`,
   media: {
-    s3Bucket: process.env.AWS_S3_BUCKET,
+    aws: config.get('aws'),
   },
   modules: ['modules/media'],
 };
