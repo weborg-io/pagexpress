@@ -31,7 +31,7 @@ module.exports = (accessMiddlewares, pxConfig = {}) => {
     localUpload(tempUploadFolder).array('images'),
     mediaController.uploadImages
   );
-  router.put(
+  router.patch(
     routes.updateMedia,
     auth,
     grandAccess('updateAny', resourceName),

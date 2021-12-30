@@ -1,5 +1,9 @@
 const path = require('path');
-const { Media, mediaValidationSchema } = require('../models/Media');
+const {
+  Media,
+  mediaValidationSchema,
+  updateMediaValidationSchema,
+} = require('../models/Media');
 const { removeTempFile } = require('../local/local-upload');
 const { BadRequest } = require('../../../utils/errors');
 const { S3Connector, s3CommonUtils } = require('../s3');
@@ -149,10 +153,10 @@ class MediaController {
 
   async updateMedia(req, res, next) {
     const { mediaId } = req.params;
-    const { error } = mediaValidationSchema.validate(req.body);
+    const { error } = updateMediaValidationSchema.validate(req.body);
 
     if (error) {
-      next(BadRequest(error.details[0].message));
+      next(new BadRequest(error.details[0].message));
 
       return;
     }

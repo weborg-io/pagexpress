@@ -26,11 +26,16 @@ const mediaValidationSchema = Joi.object({
   width: Joi.number().required(),
   height: Joi.number().required(),
   size: Joi.number().required(),
-  type: Joi.string()
+  mimetype: Joi.string()
     .required()
     .valid(`"${ALLOW_CONTENT_TYPES.join('","')}"`),
   url: Joi.string().required().max(1024),
   versionKeys: Joi.array().items(Joi.string().required().max(1024)),
+});
+
+const updateMediaValidationSchema = Joi.object({
+  name: Joi.string().required().max(50),
+  description: Joi.string().max(100),
 });
 
 const Media = model('Media', MediaSchema);
@@ -39,4 +44,5 @@ module.exports = {
   Media,
   MediaSchema,
   mediaValidationSchema,
+  updateMediaValidationSchema,
 };
