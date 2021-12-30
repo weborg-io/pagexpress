@@ -29,7 +29,7 @@ const getMetadata = imagePath => sharp(imagePath).metadata();
  * @returns {Sharp}
  */
 const getImageTransformer = (image, { width, height, format }) => {
-  const transformer = sharp(image);
+  const transformer = image ? sharp(image) : sharp();
 
   if (width || height) {
     transformer.resize({

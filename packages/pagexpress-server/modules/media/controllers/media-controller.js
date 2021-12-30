@@ -27,16 +27,27 @@ class MediaController {
       const media = await Media.findById(mediaId);
 
       if (!media) {
-        return next(new BadRequest('Media object not exists'));
+        next(new BadRequest('Media object not exists'));
+
+        return;
       }
 
-      const imageStream = await this.s3Connector.getImageVersion(
-        mediaId,
-        req.query
-      );
+      const targetKey = this.utils.getMediaKey(mediaId, req.query);
+      let image;
 
-      return imageStream
-        ? imageStream.pipe(res)
+      if (media.versionKeys.includes(targetKey)) {
+        image = await this.s3Connector.getObjectIfExists({
+          Bucket: this.mediaConfig.s3Bucket,
+          Key: targetKey,
+        });
+      } else {
+        image = await this.s3Connector.createImageVersion(media._id, req.query);
+        media.versionKeys = [...media.versionKeys, targetKey];
+        media.save();
+      }
+
+      return image
+        ? image.createReadStream().pipe(res)
         : next(new BadRequest('Image is not available'));
     } catch (err) {
       next(err);
@@ -114,15 +125,16 @@ class MediaController {
         const media = new Media({
           name: path.parse(file.originalname).name,
         });
-        const { width, height, format } = await this.uploadSingleImage(
-          media._id,
-          file
-        );
+        const { width, height, format, targetKey } =
+          await this.uploadSingleImage(media._id, file);
         media.mimetype = `image/${format}`;
         media.size = file.size;
         media.url = this.getImageUrl(media._id);
         media.width = width;
         media.height = height;
+        media.versionKeys = media.versionKeys
+          ? [...media.versionKeys, targetKey]
+          : [targetKey];
 
         return media.save();
       });
@@ -161,7 +173,12 @@ class MediaController {
     const { mediaId } = req.params;
 
     try {
-      await Media.findOneAndRemove(mediaId);
+      const media = await Media.findById(mediaId);
+      const { versionKeys } = media;
+      await Promise.all(
+        versionKeys.map(key => this.s3Connector.removeObject(key))
+      );
+      await media.remove();
       res.send(mediaId);
     } catch (err) {
       next(err);

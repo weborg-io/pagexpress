@@ -10,17 +10,18 @@ class S3Connector {
 
   getS3Params(bufferImageObject, targetKey) {
     return {
-      ContentType: `image/${bufferImageObject.format}`,
+      ContentType: `image/${bufferImageObject.info.format}`,
       Bucket: this.config.s3Bucket,
       Key: targetKey || Date.now().toString(),
       Body: bufferImageObject.data,
+      // ACL: 'public-read',
     };
   }
 
   /**
    *
    * @param params
-   * @returns {Promise<null|Request<S3.GetObjectOutput, AWSError>>}
+   * @returns {Promise<null|Request<S3.GetObjectOutput>>}
    */
   async getObjectIfExists(params) {
     try {
@@ -37,19 +38,9 @@ class S3Connector {
   /**
    * @param {string} mediaId
    * @param {object} options
-   * @returns {Promise<null|stream.Readable|Sharp>}
+   * @returns {Promise<Request<S3.GetObjectOutput>>}
    */
-  async getImageVersion(mediaId, options) {
-    const targetKey = this.utils.getMediaKey(mediaId, options);
-    const requestedImage = await this.getObjectIfExists({
-      Bucket: this.config.s3Bucket,
-      Key: targetKey,
-    });
-
-    if (requestedImage) {
-      return requestedImage.createReadStream();
-    }
-
+  async createImageVersion(mediaId, options) {
     const originImageKey = this.utils.getMediaKey(mediaId);
     const originImage = await this.getObjectIfExists({
       Bucket: this.config.s3Bucket,
@@ -60,16 +51,19 @@ class S3Connector {
       return null;
     }
 
-    const transformer = image.getImageTransformer(options);
+    const transformer = image.getImageTransformer(null, options);
     const imageStream = originImage.createReadStream().pipe(transformer);
-    await this.upload({ data: imageStream }, targetKey);
-
-    return imageStream;
+    const targetKey = this.utils.getMediaKey(mediaId, options);
+    const format = options.format || this.config.defaultImageFormat;
+    await this.upload({ data: imageStream, info: { format } }, targetKey);
+    return s3.getObject({
+      Bucket: this.config.s3Bucket,
+      Key: targetKey,
+    });
   }
 
   async upload(bufferImageObject, targetKey) {
     const uploadParams = this.getS3Params(bufferImageObject, targetKey);
-
     try {
       await s3
         .upload(uploadParams, err => {
@@ -78,6 +72,22 @@ class S3Connector {
           }
         })
         .promise();
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async removeObject(objectKey) {
+    try {
+      console.log(objectKey);
+      const params = {
+        Bucket: this.config.s3Bucket,
+        Key: objectKey,
+      };
+      await s3.headObject(params).promise();
+      await s3.deleteObject(params).promise();
+
+      return objectKey;
     } catch (err) {
       throw new Error(err);
     }
