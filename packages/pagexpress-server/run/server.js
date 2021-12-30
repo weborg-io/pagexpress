@@ -1,9 +1,11 @@
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const middlewares = require('../middlewares');
 const pxConfig = require('../px-config');
 const { errorHandler } = middlewares;
+const rootPath = path.resolve(__dirname, '../');
 
 /**
  * @typedef ServerConfig
@@ -44,7 +46,17 @@ class Server {
   }
 
   initModules() {
-    require('../modules')(this.app, middlewares, pxConfig);
+    const { modules, apiRootPath } = pxConfig;
+
+    if (!(modules && Array.isArray(modules))) {
+      return;
+    }
+
+    for (const modulePath of modules) {
+      const moduleAbsolutePath = path.resolve(rootPath, modulePath);
+      const { router } = require(moduleAbsolutePath)(middlewares, pxConfig);
+      this.app.use(apiRootPath, router);
+    }
   }
 
   initErrorHandler() {

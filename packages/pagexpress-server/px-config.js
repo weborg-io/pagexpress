@@ -4,4 +4,5 @@ module.exports = {
   media: {
     s3Bucket: process.env.AWS_S3_BUCKET,
   },
+  modules: ['modules/media'],
 };

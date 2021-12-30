@@ -1,6 +1,6 @@
 const path = require('path');
-const { Media } = require('../models/Media');
-const { removeTempFile } = require('./local-upload');
+const { Media, mediaValidationSchema } = require('../models/Media');
+const { removeTempFile } = require('../local/local-upload');
 const { BadRequest } = require('../../../utils/errors');
 const { S3Connector, s3CommonUtils } = require('../s3');
 const { image } = require('../tools');
@@ -16,6 +16,8 @@ class MediaController {
     this.getMedia = this.getMedia.bind(this);
     this.uploadImages = this.uploadImages.bind(this);
     this.uploadSingleImage = this.uploadSingleImage.bind(this);
+    this.updateMedia = this.updateMedia.bind(this);
+    this.deleteMedia = this.deleteMedia.bind(this);
   }
 
   async getImage(req, res, next) {
@@ -78,10 +80,10 @@ class MediaController {
 
   getImageUrl(mediaId) {
     const { apiBaseUrl } = this.appConfig;
-    const { mediaApiBasePath, routes } = this.mediaConfig;
+    const { routes } = this.mediaConfig;
     const imageEndpoint = routes.getImage.split(':').shift();
 
-    return `${apiBaseUrl}${mediaApiBasePath}${imageEndpoint}${mediaId}`;
+    return `${apiBaseUrl}${imageEndpoint}${mediaId}`;
   }
 
   async uploadSingleImage(mediaId, file) {
@@ -128,6 +130,39 @@ class MediaController {
 
       res.json(mediaObjects);
       files.forEach(file => removeTempFile(file.path));
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updateMedia(req, res, next) {
+    const { mediaId } = req.params;
+    const { error } = mediaValidationSchema.validate(req.body);
+
+    if (error) {
+      next(BadRequest(error.details[0].message));
+
+      return;
+    }
+
+    try {
+      const updateResult = await Media.findOneAndUpdate(
+        { _id: mediaId },
+        req.body,
+        { new: true }
+      );
+      res.json(updateResult);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteMedia(req, res, next) {
+    const { mediaId } = req.params;
+
+    try {
+      await Media.findOneAndRemove(mediaId);
+      res.send(mediaId);
     } catch (err) {
       next(err);
     }

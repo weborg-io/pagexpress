@@ -9,8 +9,14 @@ module.exports = {
   maxWidth: 2000,
   maxHeight: 1200,
   routes: {
-    getImage: '/image/:mediaId',
-    getMedia: '/:mediaId?',
-    uploadImages: '/image/upload',
+    getImage: '/media/image/:mediaId',
+    getMedia: '/media/:mediaId?',
+    updateMedia: '/media/:mediaId',
+    deleteMedia: '/media/:mediaId',
+    uploadImages: '/media/image/upload',
+    getGallery: '/gallery/:galleryId?',
+    createGallery: '/gallery',
+    updateGallery: '/gallery/:galleryId',
+    deleteGallery: '/gallery/:galleryId',
   },
 };
