@@ -31,7 +31,13 @@ class GalleryController {
         return;
       }
 
-      const galleries = await Gallery.find();
+      const galleries = await Gallery.find()
+        .populate({
+          path: 'images',
+          model: 'Media',
+          select: 'name url width height mimetype',
+        })
+        .exec();
 
       res.json(galleries);
     } catch (err) {
