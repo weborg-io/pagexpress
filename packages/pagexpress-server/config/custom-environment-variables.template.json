@@ -9,6 +9,18 @@
   },
   "server": {
     "host": "SERVER_PROCESS_HOST",
-    "port": "SERVER_PROCESS_PORT"
-  }
+    "port": "SERVER_PROCESS_PORT",
+    "origin": "SERVER_APP_URL"
+  },
+  "client": {
+    "origin": "CLIENT_ORIGIN"
+  },
+  "aws": {
+    "accessKeyId": "AWS_ACCESS_KEY_ID",
+    "secretAccessKey": "AWS_SECRET_ACCESS_KEY",
+    "region": "AWS_S3_REGION",
+    "s3Bucket": "AWS_S3_BUCKET",
+    "s3RootFolder": "AWS_S3_ROOT_FOLDER"
+  },
+  "whiteListDomains": "WHITELIST_DOMAINS"
 }

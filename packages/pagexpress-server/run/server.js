@@ -1,13 +1,19 @@
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const errorHandler = require('../middlewares/error-handler');
+const middlewares = require('../middlewares');
+const pxConfig = require('../px-config');
+const { errorHandler } = middlewares;
+const rootPath = path.resolve(__dirname, '../');
 
 /**
  * @typedef ServerConfig
  *
- * @property {string} object
- * @property {string} server
+ * @property {object} mongodb
+ * @property {object} server
+ * @property {object} client
+ * @property {array} whiteListDomains
  */
 
 class Server {
@@ -23,7 +29,15 @@ class Server {
     this.app = express();
     this.app.use(bodyParser.json({ limit: '50mb' }));
     this.app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: [
+          ...this.config.whiteListDomains.split(','),
+          this.config.client.origin,
+        ],
+        optionsSuccessStatus: 200,
+      })
+    );
     this.server = require('http').createServer(this.app);
   }
 
@@ -35,6 +49,20 @@ class Server {
     require('../routes')(this.app);
   }
 
+  initModules() {
+    const { modules, apiRootPath } = pxConfig;
+
+    if (!(modules && Array.isArray(modules))) {
+      return;
+    }
+
+    for (const modulePath of modules) {
+      const moduleAbsolutePath = path.resolve(rootPath, modulePath);
+      const { router } = require(moduleAbsolutePath)(middlewares, pxConfig);
+      this.app.use(apiRootPath, router);
+    }
+  }
+
   initErrorHandler() {
     this.app.use(errorHandler);
   }
@@ -42,7 +70,7 @@ class Server {
   initSocketIo() {
     const io = require('socket.io')(this.server, {
       cors: {
-        origin: process.env.CLIENT_APP_URL,
+        origin: this.config.client.origin,
         methods: ['GET', 'POST'],
       },
       transports: ['websocket'],
@@ -57,6 +85,7 @@ class Server {
     this.initDb();
     this.initSocketIo();
     this.initRouting();
+    this.initModules();
     this.initErrorHandler();
   }
 

@@ -26,6 +26,10 @@ const roleGrands = () => {
     .readAny('pageAttributeType')
     .updateAny('page')
     .updateAny('pageDetails')
+    .createAny('media')
+    .readAny('media')
+    .updateAny('media')
+    .deleteAny('media')
     .readAny('menu')
     .updateAny('menu');
 
@@ -49,6 +53,10 @@ const roleGrands = () => {
     .readAny('pageDetails')
     .updateAny('pageDetails')
     .deleteAny('pageDetails')
+    .createAny('media')
+    .readAny('media')
+    .updateAny('media')
+    .deleteAny('media')
     .readAny('menu')
     .updateAny('menu');
 

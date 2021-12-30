@@ -24,8 +24,10 @@ class ServerConnector {
 
   init() {
     const server = new Server({
+      client: this.config.get('client'),
       mongodb: this.config.get('mongodb'),
       server: this.config.get('server'),
+      whiteListDomains: this.config.get('whiteListDomains'),
     });
 
     server.run();
