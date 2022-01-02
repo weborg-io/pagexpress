@@ -1,3 +1,4 @@
+import _omit from 'lodash/omit';
 import { showRequestResult, getSlug, downloadJsonFile } from '@/utils';
 
 export const state = () => ({
@@ -100,17 +101,12 @@ export const actions = {
       updatedMainPageData && !state.unsavedData.includes('pageDetails');
 
     if (!savedAllData) {
-      const { _id, title, name, description, country, version } =
-        state.pageDetails;
+      const { _id } = state.pageDetails;
 
       const saveDetailsResult = await showRequestResult({
         request: this.$axios.put(`page-details/${_id}`, {
-          country,
-          description,
-          name,
+          ..._omit(state.pageDetails, '_id'),
           pageId: state.mainData._id,
-          title,
-          version,
         }),
         dispatch,
       });

@@ -118,7 +118,7 @@ const updatePageDetails = async (req, res, next) => {
       );
     }
 
-    pageDetails.overwrite(requestData);
+    await pageDetails.update(requestData);
     await pageDetails.save();
     res.json(pageDetails);
   } catch (err) {
