@@ -6,7 +6,7 @@
     @mouseleave="setSelfDestroyTimeout"
   >
     <button class="delete" @click="destroy"></button>
-    <slot />
+    <slot></slot>
   </div>
 </template>
 
@@ -55,7 +55,7 @@ export default {
 .notification {
   font-size: var(--font-md);
   font-weight: var(--font-weight-medium);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
 
   &:not(:last-of-type) {
     margin-bottom: var(--spacing);

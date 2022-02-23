@@ -4,13 +4,13 @@
     :class="type ? `draggable-form__outer--${type}` : ''"
   >
     <div class="draggable-form">
-      <slot name="form" />
+      <slot name="form"></slot>
       <span class="draggable-form__grab-handler">
         <fa icon="grip-vertical" />
       </span>
     </div>
     <div class="draggable-form__actions buttons">
-      <slot name="actions" />
+      <slot name="actions"></slot>
     </div>
   </div>
 </template>

@@ -30,8 +30,9 @@
         <label class="d-block mb-1">Breakpoints</label>
         <div class="d-flex">
           <label
-            v-for="(breakpointChecked,
-            breakpoint) in mutableValue.sourcesBreakpoints"
+            v-for="(
+              breakpointChecked, breakpoint
+            ) in mutableValue.sourcesBreakpoints"
             :key="breakpoint"
             :for="fieldId('breakpoint' + breakpoint)"
             class="checkbox breakpoint-checkbox"
@@ -189,38 +190,47 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+
   & > input {
     margin-right: 0;
   }
 }
+
 .d-block {
   display: block;
 }
+
 .d-flex {
   display: flex;
 }
+
 .row {
   width: 100%;
   display: flex;
+
   & > div {
     position: relative;
     width: 100%;
-    padding-left: 7.5px;
-    padding-right: 7.5px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 }
+
 .col-2 {
-  flex: 0 0 16.66666%;
-  max-width: 16.66666%;
+  flex: 0 0 16.6667%;
+  max-width: 16.6667%;
 }
+
 .col-4 {
-  flex: 0 0 33.333333%;
-  max-width: 33.333333%;
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
 }
+
 .col-6 {
   flex: 0 0 50%;
   max-width: 50%;
 }
+
 .mb-1 {
   margin-bottom: 5px;
 }

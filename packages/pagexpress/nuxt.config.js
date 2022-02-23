@@ -1,3 +1,5 @@
+const path = require('path');
+
 export default {
   ssr: false,
   /*
@@ -53,6 +55,7 @@ export default {
     '@nuxtjs/eslint-module',
     // Doc: https://github.com/nuxt-community/stylelint-module
     '@nuxtjs/stylelint-module',
+    '@nuxt/postcss8',
     [
       'nuxt-fontawesome',
       {
@@ -121,7 +124,11 @@ export default {
     },
     postcss: {
       plugins: {
+        'postcss-import': true,
+        'tailwindcss/nesting': {},
+        tailwindcss: path.resolve(__dirname, './tailwind.config.js'),
         'postcss-nested': {},
+        autoprefixer: {},
       },
       preset: {
         features: {

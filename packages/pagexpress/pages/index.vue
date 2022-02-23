@@ -91,7 +91,7 @@ export default {
     ...mapState({
       pagesList: state => {
         const pagesListData = {};
-        state.pages.pagesList.map(
+        state.pages.pagesList.forEach(
           ({ _id, name, url, type, updatedAt, createdAt }) => {
             pagesListData[_id] = [
               name,
@@ -176,6 +176,7 @@ export default {
     }
   }
 }
+
 .pagination {
   .is-disabled {
     pointer-events: none;

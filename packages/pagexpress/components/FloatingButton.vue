@@ -44,15 +44,9 @@ export default {
   bottom: var(--spacing-2);
   line-height: 1;
   border: none;
-  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 19px 38px rgb(0 0 0 / 30%), 0 15px 12px rgb(0 0 0 / 22%);
   transition: all 0.2s ease-in-out;
   cursor: pointer;
-
-  &:hover,
-  &:focus-visible {
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-    transform: translate3d(0, 0.2rem, 0);
-  }
 
   &--icon {
     width: var(--spacing-3);
@@ -79,5 +73,11 @@ export default {
     color: var(--white);
     background-color: var(--red);
   }
+}
+
+.floating-button:hover,
+.floating-button:focus-visible {
+  box-shadow: 0 14px 28px rgb(0 0 0 / 25%), 0 10px 10px rgb(0 0 0 / 22%);
+  transform: translate3d(0, 0.2rem, 0);
 }
 </style>

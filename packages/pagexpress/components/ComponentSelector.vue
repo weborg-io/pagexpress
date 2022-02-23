@@ -139,14 +139,8 @@ export default {
         {
           name: 'recent',
           data: lastUsedPatternIds.map(patternId => {
-            const {
-              _id,
-              label,
-              name,
-              description,
-            } = this.componentPatterns.find(
-              pattern => pattern._id === patternId
-            );
+            const { _id, label, name, description } =
+              this.componentPatterns.find(pattern => pattern._id === patternId);
 
             return {
               _id,
@@ -217,9 +211,8 @@ export default {
         this.toggleBlockingBodyHeight(true);
 
         setTimeout(() => {
-          const autosuggestInput = this.$refs.autosuggest.$el.querySelector(
-            'input'
-          );
+          const autosuggestInput =
+            this.$refs.autosuggest.$el.querySelector('input');
           autosuggestInput.click();
           autosuggestInput.focus();
           window.addEventListener('keyup', this.closeOnEscape);

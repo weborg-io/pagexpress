@@ -95,7 +95,7 @@
       </div>
     </div>
     <div v-if="hasSlot" class="card-action-below__wrapper">
-      <slot />
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -250,6 +250,7 @@ export default {
 .card-header-title {
   flex-direction: column;
   align-items: flex-start;
+  padding-left: 0;
 
   & > * {
     display: block;
@@ -272,10 +273,6 @@ export default {
     &:hover {
       opacity: 1;
     }
-  }
-
-  &-title {
-    padding-left: 0;
   }
 
   .component-selector__container,

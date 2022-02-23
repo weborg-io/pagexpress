@@ -31,13 +31,12 @@ class MediaController {
 
         return;
       }
-
       const targetKey = this.utils.getMediaKey(mediaId, req.query);
       let image;
 
       if (media.versionKeys.includes(targetKey)) {
         image = await this.s3Connector.getObjectIfExists({
-          Bucket: this.mediaConfig.s3Bucket,
+          Bucket: this.mediaConfig.aws.s3Bucket,
           Key: targetKey,
         });
       } else {
