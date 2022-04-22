@@ -1,10 +1,10 @@
 <template>
-  <div class="flex w-full justify-center my-8">
-    <div class="rounded-lg shadow-xl bg-gray-50 lg:w-1/2">
+  <div class="flex flex-col w-full justify-center mb-8">
+    <div class="rounded-lg shadow-xl bg-gray-50 lg:w-full">
       <div class="m-4">
-        <label class="inline-block mb-2 text-gray-500"
-          >Upload Image(jpg,png,svg,jpeg)</label
-        >
+        <label class="inline-block mb-2 text-gray-500">
+          Upload Images (jpg,png,svg,jpeg)
+        </label>
         <div class="flex items-center justify-center w-full">
           <label
             class="
@@ -38,28 +38,67 @@
                   group-hover:text-gray-600
                 "
               >
-                Select a photo
+                Select a photos
               </p>
             </div>
-            <input type="file" class="opacity-0" />
+            <input
+              ref="input"
+              type="file"
+              multiple
+              class="opacity-0"
+              @change="triggerUpload"
+            />
           </label>
         </div>
       </div>
-      <div class="flex p-2 space-x-4">
-        <button class="button is-info">
-          Upload
-        </button>
-        <button class="button is-danger">
-          Cancel
-        </button>
-      </div>
     </div>
+    <progress v-if="uploadPercentage > 0" class="w-full" max="100" :value.prop="uploadPercentage"></progress>
   </div>
 </template>
 
 <script>
 export default {
   name: 'ImageUpload',
+
+  props: {
+    upload: {
+      type: Function,
+      required: true,
+    }
+  },
+
+  data() {
+    return {
+      uploadPercentage: {
+        type: Number,
+        default: 0,
+      },
+    };
+  },
+
+  methods: {
+    triggerUpload() {
+      const images = this.$refs.input.files;
+
+      if (images && images.length) {
+        this.upload({
+          images,
+          progressCb: this.updateUploadsProgress
+        });
+      }
+    },
+
+    updateUploadsProgress(event) {
+      this.uploadPercentage = parseInt(
+        Math.round(( event.loaded / event.total ) * 100)
+      );
+
+      if (this.uploadPercentage === 100) {
+        setTimeout(() => {
+          this.uploadPercentage = 0;
+        }, 3000);
+      }
+    },
+  }
 };
 </script>
-

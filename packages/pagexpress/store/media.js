@@ -1,5 +1,5 @@
-import { showRequestResult } from '@/utils';
-import responsive from 'tailwindcss/lib/util/responsive';
+import _pick from 'lodash/pick'
+import { showRequestResult, enrichMedia } from '@/utils';
 
 export const state = () => ({
   singleMediaInfo: null,
@@ -11,15 +11,9 @@ export const state = () => ({
   sort: '-updatedAt',
 });
 
-const enrichMediaData = media => ({
-  ...media,
-  thumbnail: `${media.url}?width=300`,
-  proportions: media.width > media.height ? 'landscape' : 'portrait',
-});
-
 export const mutations = {
   LOAD_MEDIA(state, { data, currentPage, totalPages }) {
-    state.media = data.map(enrichMediaData);
+    state.media = data.map(enrichMedia);
     state.currentPage = currentPage;
     state.totalPages = totalPages;
   },
@@ -29,7 +23,21 @@ export const mutations = {
   },
 
   ADD_MEDIA(state, newMediaItems) {
-    state.media = [...state.media, newMediaItems.map(enrichMediaData)];
+    state.media = [...newMediaItems.map(enrichMedia), ...state.media];
+  },
+
+  UPDATE_MEDIA(state, newMediaData) {
+    state.media = state.media.map(singleMedia => {
+      if (singleMedia._id === newMediaData._id) {
+        return enrichMedia(newMediaData);
+      }
+
+      return singleMedia;
+    });
+  },
+
+  REMOVE_MEDIA(state, targetImageId) {
+    state.media = state.media.filter(image => image._id !== targetImageId);
   },
 };
 
@@ -59,16 +67,45 @@ export const actions = {
     commit('LOAD_SINGLE_MEDIA_INFO', singleMediaInfo);
   },
 
-  async uploadImages({ commit, dispatch }, images) {
+  async uploadImages({ commit, dispatch }, { images, progressCb }) {
+    const formData = new FormData();
+
+    for (const image of images) {
+      formData.append('images', image);
+    }
+
     const response = await showRequestResult({
-      request: this.$axios.get('/media/image/upload', {
-        params: {
-          images,
-        },
+      request: this.$axios.post('/media/image/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: progressCb,
       }),
       dispatch,
     });
 
     commit('ADD_MEDIA', response);
   },
+
+  async updateMedia({ commit, dispatch }, { mediaId, mediaData }) {
+    const newMediaData = await showRequestResult({
+      request: this.$axios.patch(`media/${mediaId}`, {
+        ..._pick(mediaData, ['name', 'description']),
+      }),
+      dispatch,
+    });
+
+    if (newMediaData) {
+      commit('UPDATE_MEDIA', newMediaData);
+    }
+  },
+
+  async removeImage({ commit, dispatch }, mediaId) {
+    const removedImageId = await showRequestResult({
+      request: this.$axios.delete(`media/${mediaId}`),
+      dispatch,
+    });
+
+    if (removedImageId) {
+      commit('REMOVE_MEDIA', removedImageId);
+    }
+  }
 };

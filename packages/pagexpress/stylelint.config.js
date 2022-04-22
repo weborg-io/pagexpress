@@ -9,6 +9,7 @@ module.exports = {
   ],
   rules: {
     "selector-class-pattern": null,
-    'no-descending-specificity': null
+    'no-descending-specificity': null,
+    'custom-property-no-missing-var-function': null
   }
 }

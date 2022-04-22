@@ -1,6 +1,7 @@
 export * from './current-component-position';
 export * from './download-json-file';
 export * from './enrich-by-id';
+export * from './enrich-media';
 export * from './format-date';
 export * from './format-request-error';
 export * from './get-all-descendants';
