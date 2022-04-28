@@ -1,5 +1,5 @@
-import _omit from 'lodash/omit'
-import { enrichMedia, reorderItems, showRequestResult } from '@/utils'
+import _uniqBy from 'lodash/uniqBy';
+import { enrichMedia, reorderItems, showRequestResult } from '@/utils';
 
 export const state = () => ({
   activeGallery: null,
@@ -14,8 +14,12 @@ export const mutations = {
   LOAD_ACTIVE_GALLERY(state, galleryData) {
     state.activeGallery = {
       ...galleryData,
-      images: galleryData.images.map(enrichMedia)
+      images: galleryData.images.map(enrichMedia),
     };
+  },
+
+  DEACTIVATE_GALLERY(state) {
+    state.activeGallery = null;
   },
 
   LOAD_SINGLE_MEDIA_INFO(state, singleMediaInfo) {
@@ -24,6 +28,7 @@ export const mutations = {
 
   ADD_GALLERY(state, newGalleryData) {
     state.galleries = [newGalleryData, ...state.galleries];
+    state.activeGallery = newGalleryData;
   },
 
   UPDATE_GALLERY(state, galleryData) {
@@ -38,8 +43,9 @@ export const mutations = {
   },
 
   REMOVE_GALLERY(state, targetGalleryId) {
-    state.galleries = state.galleries
-      .filter(gallery => gallery._id !== targetGalleryId);
+    state.galleries = state.galleries.filter(
+      gallery => gallery._id !== targetGalleryId
+    );
     state.activeGallery = null;
   },
 };
@@ -73,50 +79,75 @@ export const actions = {
       dispatch,
     });
 
-    commit('ADD_GALLERY', { _id: galleryId, name });
+    commit('ADD_GALLERY', { _id: galleryId, name, images: [] });
   },
 
   async saveGallery({ dispatch, state }) {
     await showRequestResult({
-      request: this.$axios.put('galleries/', _omit(state.activeGallery, ['_id'])),
+      request: this.$axios.put(`galleries/${state.activeGallery._id}`, {
+        name: state.activeGallery.name,
+        images: state.activeGallery.images.map(g => g._id),
+      }),
+      successMessage: 'Saved changes',
       dispatch,
     });
 
     dispatch('resetDirtyState', null, { root: true });
   },
 
-  async removeGallery({ commit, dispatch }, galleryId) {
+  async removeGallery({ commit, dispatch }) {
+    if (
+      !confirm(`Please, confirm removing ${state.activeGallery.name} gallery`)
+    ) {
+      return;
+    }
+
     const removedGalleryId = await showRequestResult({
-      request: this.$axios.post('galleries/', galleryId),
+      request: this.$axios.post(`galleries/${state.activeGallery._id}`),
+      successMessage: 'Gallery has been removed',
       dispatch,
     });
 
     commit('REMOVE_GALLERY', removedGalleryId);
   },
 
-  renameGallery({ commit }, newName) {
-    commit('UPDATE_GALLERY', { name: newName });
+  resetActiveGalleryState({ commit, dispatch }) {
+    dispatch('resetDirtyState', null, { root: true });
+    commit('DEACTIVATE_GALLERY');
   },
 
-  addImages({ commit, state }, images) {
+  renameGallery({ commit, dispatch, state }, newName) {
+    if (state.activeGallery && state.activeGallery.name === newName) {
+      return;
+    }
+
+    commit('UPDATE_GALLERY', { name: newName });
+    dispatch('setDirtyState', null, { root: true });
+  },
+
+  addImages({ commit, dispatch, state }, images) {
+    dispatch('setDirtyState', null, { root: true });
     commit('UPDATE_GALLERY', {
       ...state.activeGallery,
-      images: [ ...state.activeGallery.images, ...images ],
+      images: _uniqBy([...images, ...state.activeGallery.images], '_id'),
     });
   },
 
-  removeImages({ commit, state }, imageIds) {
+  removeImages({ commit, dispatch, state }, imageIds) {
+    dispatch('setDirtyState', null, { root: true });
     commit('UPDATE_GALLERY', {
       ...state.activeGallery,
-      images: state.activeGallery.images
-        .filter(image => !imageIds.includes(image._id))
-    })
+      images: state.activeGallery.images.filter(
+        image => !imageIds.includes(image._id)
+      ),
+    });
   },
 
-  reorderImages({ commit, state }, dropResult) {
+  reorderImages({ commit, dispatch, state }, dropResult) {
+    dispatch('setDirtyState', null, { root: true });
     commit('UPDATE_GALLERY', {
       ...state.activeGallery,
-      images: reorderItems(state.activeGallery.images, dropResult)
-    })
+      images: reorderItems(state.activeGallery.images, dropResult),
+    });
   },
 };

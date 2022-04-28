@@ -8,6 +8,7 @@ import Field from './Field';
 import FloatingButton from './FloatingButton';
 import Form from './Form';
 import ImageUpload from './ImageUpload';
+import MediaExplorer from './MediaExplorer.vue';
 import MenuItems from './MenuItems';
 import Modal from './Modal';
 import ModalComponent from './ModalComponent';
@@ -34,6 +35,7 @@ export {
   FloatingButton,
   Form,
   ImageUpload,
+  MediaExplorer,
   MenuItems,
   Modal,
   ModalComponent,

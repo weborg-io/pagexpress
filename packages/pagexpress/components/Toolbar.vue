@@ -20,18 +20,18 @@ export default {
 
   computed: {
     isLeft() {
-      return !!this.$slots.left
+      return !!this.$slots.left;
     },
 
     isMiddle() {
-      return !!this.$slots.middle
+      return !!this.$slots.middle;
     },
 
     isRight() {
-      return !!this.$slots.right
+      return !!this.$slots.right;
     },
   },
-}
+};
 </script>
 
 <style lang="postcss" scoped>

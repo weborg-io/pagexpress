@@ -8,8 +8,13 @@ module.exports = {
     'stylelint-config-prettier',
   ],
   rules: {
-    "selector-class-pattern": null,
+    'selector-class-pattern': null,
     'no-descending-specificity': null,
-    'custom-property-no-missing-var-function': null
-  }
-}
+    'at-rule-no-unknown': [
+      true,
+      {
+        ignoreAtRules: ['extends', 'tailwind', 'screen'],
+      },
+    ],
+  },
+};

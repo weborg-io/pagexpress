@@ -1,3 +1,4 @@
+/* eslint-disable-next-line */
 const path = require('path');
 
 export default {
@@ -78,6 +79,7 @@ export default {
               'faEye',
               'faExclamationTriangle',
               'faUserEdit',
+              'faArrowsAlt',
             ],
           },
         ],
