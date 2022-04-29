@@ -123,10 +123,11 @@
             @click="markItem(image._id)"
           >
             <img
-              class="object-cover w-full h-full"
+              class="object-cover w-full h-full cursor-pointer"
               :style="{ 'aspect-ratio': `${image.width} / ${image.height}` }"
               :src="image.thumbnail"
               :alt="image.name"
+              @click="preview(image.url)"
             />
             <span
               class="image-drag-handler absolute top-1 right-1 z-20 w-8 h-8 bg-gray-50 rounded flex items-center justify-center cursor-move"
@@ -145,6 +146,7 @@
         </Draggable>
       </Container>
     </div>
+
     <MediaExplorer
       confirm-button-label="Add to gallery"
       :submit-action="addImages"
@@ -155,13 +157,20 @@
       :toggle-visibility="toggleMediaExplorerVisibility"
       :visible="mediaExplorerVisible"
     ></MediaExplorer>
+
+    <Modal
+      :visible="!!imagePreview"
+      :toggle-visibility="closeImagePreview"
+      :image-url="imagePreview"
+    >
+    </Modal>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
 import { Container, Draggable } from 'vue-smooth-dnd';
-import { Toolbar, MediaExplorer } from '@/components';
+import { Toolbar, MediaExplorer, Modal } from '@/components';
 import FieldText from '@/components/FieldTypes/FieldText';
 
 const BULK_ACTIONS = {
@@ -169,7 +178,14 @@ const BULK_ACTIONS = {
 };
 
 export default {
-  components: { FieldText, Toolbar, MediaExplorer, Container, Draggable },
+  components: {
+    FieldText,
+    Toolbar,
+    Modal,
+    MediaExplorer,
+    Container,
+    Draggable,
+  },
 
   data() {
     return {
@@ -178,6 +194,7 @@ export default {
       mediaExplorerVisible: false,
       newGalleryName: '',
       markedItems: [],
+      imagePreview: null,
       dropPlaceholderOptions: {
         className: 'drop-preview',
         animationDuration: '150',
@@ -267,6 +284,14 @@ export default {
       } else {
         this.resetActiveGalleryState();
       }
+    },
+
+    preview(imageUrl) {
+      this.imagePreview = imageUrl;
+    },
+
+    closeImagePreview() {
+      this.imagePreview = null;
     },
   },
 };

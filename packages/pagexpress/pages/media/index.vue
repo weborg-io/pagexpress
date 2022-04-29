@@ -74,9 +74,10 @@
           <td class="border border-gray-200 w-16 p-1">
             <div class="w-16 h-16 relative overflow-hidden">
               <img
-                class="object-center object-cover absolute min-w-full min-h-full"
+                class="object-center object-cover absolute min-w-full min-h-full cursor-pointer"
                 :src="image.thumbnail"
                 :alt="image.name"
+                @click="preview(image.url)"
               />
             </div>
           </td>
@@ -98,6 +99,12 @@
                 @click="editImage(image._id)"
               >
                 <fa :icon="['fa', 'edit']" />
+              </button>
+              <button
+                class="button is-small is-light m-1"
+                @click="preview(image.url)"
+              >
+                <fa :icon="['fa', 'eye']" />
               </button>
               <button
                 class="button is-small is-danger is-light m-1"
@@ -160,6 +167,13 @@
         </div>
       </form>
     </Modal>
+
+    <Modal
+      :visible="!!imagePreview"
+      :toggle-visibility="closeImagePreview"
+      :image-url="imagePreview"
+    >
+    </Modal>
   </div>
 </template>
 
@@ -177,6 +191,7 @@ export default {
       uploadPercentage: 0,
       timeout: null,
       markedItems: [],
+      imagePreview: null,
     };
   },
 
@@ -270,6 +285,14 @@ export default {
         this.searchImage(evt.target.value);
         this.markedItems = [];
       }, 200);
+    },
+
+    preview(imageUrl) {
+      this.imagePreview = imageUrl;
+    },
+
+    closeImagePreview() {
+      this.imagePreview = null;
     },
 
     markAllToggle() {
