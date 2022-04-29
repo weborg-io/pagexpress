@@ -80,6 +80,7 @@ export default {
               'faExclamationTriangle',
               'faUserEdit',
               'faArrowsAlt',
+              'faUpload',
             ],
           },
         ],

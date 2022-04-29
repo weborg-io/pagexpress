@@ -116,7 +116,7 @@
             :class="{
               'border-4 border-fuchsia-600': markedItems.includes(image._id),
             }"
-            class="flex flex-col w-full h-full p-0.5 rounded bg-gray-300 image-item relative"
+            class="flex flex-col w-full h-full border-4 border-transparent rounded bg-gray-300 image-item relative"
             @click="markItem(image._id)"
           >
             <img
@@ -146,6 +146,8 @@
       confirm-button-label="Add to gallery"
       :submit-action="addImages"
       :upload="uploadImages"
+      :keyword="search"
+      :search-image="searchImage"
       :media="media"
       :toggle-visibility="toggleMediaExplorerVisibility"
       :visible="mediaExplorerVisible"
@@ -183,17 +185,24 @@ export default {
 
   computed: {
     ...mapState('galleries', ['galleries', 'activeGallery']),
-    ...mapState('media', ['media']),
+    ...mapState('media', ['media', 'search']),
     ...mapState(['isDirty']),
   },
 
   mounted() {
     this.fetchGalleries();
+    this.resetMediaState();
     this.fetchMoreMedia();
   },
 
   methods: {
-    ...mapActions('media', ['fetchMoreMedia', 'uploadImages', 'removeImage']),
+    ...mapActions('media', [
+      'fetchMoreMedia',
+      'uploadImages',
+      'removeImage',
+      'searchImage',
+      'resetMediaState',
+    ]),
     ...mapActions('galleries', [
       'addGallery',
       'addImages',

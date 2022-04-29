@@ -5,6 +5,7 @@
       <header v-if="isHead" class="modal-card-head">
         <slot name="head"></slot>
       </header>
+      <slot name="underHead"></slot>
       <section class="modal-card-body">
         <slot></slot>
       </section>

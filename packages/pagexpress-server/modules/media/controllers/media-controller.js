@@ -124,11 +124,11 @@ class MediaController {
         const media = new Media({
           name: path.parse(file.originalname).name,
         });
-        const { width, height, format, targetKey } =
+        const { width, height, format, size, targetKey } =
           await this.uploadSingleImage(media._id, file);
         media.mimetype = `image/${format}`;
-        media.size = file.size;
         media.url = this.getImageUrl(media._id);
+        media.size = size;
         media.width = width;
         media.height = height;
         media.versionKeys = media.versionKeys

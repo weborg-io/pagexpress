@@ -7,14 +7,7 @@
         </label>
         <div class="flex items-center justify-center w-full">
           <label
-            class="
-              flex flex-col
-              w-full
-              h-32
-              border-4 border-dashed
-              hover:bg-gray-100
-              hover:border-gray-300
-            "
+            class="flex flex-col w-full h-32 border-4 border-dashed hover:bg-gray-100 hover:border-gray-300"
           >
             <div class="flex flex-col items-center justify-center pt-7">
               <svg
@@ -30,13 +23,7 @@
                 />
               </svg>
               <p
-                class="
-                  pt-1
-                  text-sm
-                  tracking-wider
-                  text-gray-400
-                  group-hover:text-gray-600
-                "
+                class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600"
               >
                 Select a photos
               </p>
@@ -52,7 +39,12 @@
         </div>
       </div>
     </div>
-    <progress v-if="uploadPercentage > 0" class="w-full" max="100" :value.prop="uploadPercentage"></progress>
+    <progress
+      v-if="uploadPercentage > 0"
+      class="w-full"
+      max="100"
+      :value.prop="uploadPercentage"
+    ></progress>
   </div>
 </template>
 
@@ -64,7 +56,7 @@ export default {
     upload: {
       type: Function,
       required: true,
-    }
+    },
   },
 
   data() {
@@ -83,22 +75,22 @@ export default {
       if (images && images.length) {
         this.upload({
           images,
-          progressCb: this.updateUploadsProgress
+          progressCb: this.updateUploadsProgress,
         });
       }
     },
 
     updateUploadsProgress(event) {
       this.uploadPercentage = parseInt(
-        Math.round(( event.loaded / event.total ) * 100)
+        Math.round((event.loaded / event.total) * 100)
       );
 
-      if (this.uploadPercentage === 100) {
+      if (Number(this.uploadPercentage) === 100) {
         setTimeout(() => {
           this.uploadPercentage = 0;
         }, 3000);
       }
     },
-  }
+  },
 };
 </script>

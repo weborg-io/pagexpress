@@ -51,7 +51,7 @@ export const mutations = {
 };
 
 export const actions = {
-  async fetchGalleries({ commit, dispatch, state }) {
+  async fetchGalleries({ commit, dispatch }) {
     const galleries = await showRequestResult({
       request: this.$axios.get('galleries/', {
         params: {

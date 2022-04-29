@@ -3,11 +3,23 @@
     <template #head>
       <MediaExplorerToolbar
         :confirm-callback="confirmCallback"
+        :upload="upload"
         :confirm-button-label="confirmButtonLabel"
         :active-confirm-button="!!markedItems.length"
+        :upload-callback="updateUploadsProgress"
+        :keyword="keyword"
+        :search-image="triggerSearch"
       >
         Picked images: {{ markedItems.length }}
       </MediaExplorerToolbar>
+    </template>
+    <template #underHead>
+      <progress
+        v-if="uploadPercentage > 0"
+        class="w-full progress is-small is-success rounded-none m-0 transition-all"
+        max="100"
+        :value.prop="uploadPercentage"
+      ></progress>
     </template>
     <template>
       <div
@@ -18,11 +30,12 @@
           v-for="singleMedia in media"
           :key="singleMedia._id"
           :class="{
-            'border-fuchsia-600': markedItems.includes(singleMedia._id),
-            'border-transparent': !markedItems.includes(singleMedia._id),
+            'border-4 border-fuchsia-600': markedItems.includes(
+              singleMedia._id
+            ),
             'col-span-2': singleMedia.proportions === 'landscape',
           }"
-          class="flex flex-col border-2 p-0.5 rounded bg-gray-300"
+          class="flex flex-col p-0.5 rounded bg-gray-300"
           @click="markItem(singleMedia._id)"
         >
           <img
@@ -75,6 +88,16 @@ export default {
       required: true,
     },
 
+    searchImage: {
+      type: Function,
+      required: true,
+    },
+
+    keyword: {
+      type: String,
+      default: null,
+    },
+
     submitAction: {
       type: Function,
       required: true,
@@ -89,7 +112,23 @@ export default {
   data() {
     return {
       markedItems: [],
+      uploadPercentage: 0,
+      timeout: null,
     };
+  },
+
+  watch: {
+    visible(value) {
+      if (value === false) {
+        return;
+      }
+
+      this.markedItems = [];
+
+      if (this.keyword) {
+        this.searchImage(null);
+      }
+    },
   },
 
   methods: {
@@ -113,6 +152,27 @@ export default {
       );
       this.submitAction(pickedMediaItems);
       this.toggleVisibility();
+    },
+
+    updateUploadsProgress(event) {
+      this.uploadPercentage = parseInt(
+        Math.round((event.loaded / event.total) * 100)
+      );
+
+      if (Number(this.uploadPercentage) === 100) {
+        setTimeout(() => {
+          this.uploadPercentage = 0;
+        }, 3000);
+      }
+    },
+
+    triggerSearch(evt) {
+      if (this.timeout) clearTimeout(this.timeout);
+
+      this.timeout = setTimeout(
+        this.searchImage.bind(null, evt.target.value),
+        200
+      );
     },
   },
 };

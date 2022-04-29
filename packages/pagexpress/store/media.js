@@ -1,7 +1,7 @@
-import _pick from 'lodash/pick'
+import _pick from 'lodash/pick';
 import { showRequestResult, enrichMedia } from '@/utils';
 
-export const state = () => ({
+const stateModel = {
   singleMediaInfo: null,
   media: null,
   currentPage: 1,
@@ -9,7 +9,9 @@ export const state = () => ({
   itemsPerPage: 50,
   search: null,
   sort: '-updatedAt',
-});
+};
+
+export const state = () => ({ ...stateModel });
 
 export const mutations = {
   LOAD_MEDIA(state, { data, currentPage, totalPages }) {
@@ -36,8 +38,19 @@ export const mutations = {
     });
   },
 
+  UPDATE_SEARCH(state, keyword) {
+    state.search = keyword;
+  },
+
   REMOVE_MEDIA(state, targetImageId) {
     state.media = state.media.filter(image => image._id !== targetImageId);
+  },
+
+  RESET_STATE(state) {
+    state.search = stateModel.search;
+    state.totalPages = stateModel.totalPages;
+    state.currentPage = stateModel.currentPage;
+    state.itemsPerPage = stateModel.itemsPerPage;
   },
 };
 
@@ -107,5 +120,14 @@ export const actions = {
     if (removedImageId) {
       commit('REMOVE_MEDIA', removedImageId);
     }
-  }
+  },
+
+  searchImage({ commit, dispatch }, keyword) {
+    commit('UPDATE_SEARCH', keyword);
+    dispatch('fetchMoreMedia');
+  },
+
+  resetMediaState({ commit }) {
+    commit('RESET_STATE');
+  },
 };
