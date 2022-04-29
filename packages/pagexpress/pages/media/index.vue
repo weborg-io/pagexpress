@@ -111,6 +111,14 @@
       </tbody>
     </table>
 
+    <div class="flex justify-end w-full my-4">
+      <Pagination
+        :change-page="changePage"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+      />
+    </div>
+
     <Modal :visible="!!editImageId" :toggle-visibility="cancelEditImage">
       <form
         v-if="!!editImageId"
@@ -157,10 +165,10 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import { Modal, Toolbar } from '@/components';
+import { Modal, Toolbar, Pagination } from '@/components';
 
 export default {
-  components: { Modal, Toolbar },
+  components: { Modal, Toolbar, Pagination },
 
   data() {
     return {
@@ -173,7 +181,7 @@ export default {
   },
 
   computed: {
-    ...mapState('media', ['media', 'search']),
+    ...mapState('media', ['media', 'search', 'currentPage', 'totalPages']),
 
     editedImageData() {
       return this.editImageId
@@ -199,6 +207,7 @@ export default {
       'removeImage',
       'searchImage',
       'resetMediaState',
+      'changePage',
     ]),
 
     /**

@@ -50,7 +50,7 @@
           :disabled="!isDirty"
           @click="saveGallery"
         >
-          <span>Save</span>
+          <span>Save Changes</span>
         </button>
       </template>
     </Toolbar>
@@ -99,7 +99,7 @@
       </div>
       <Container
         v-if="activeGallery"
-        class="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 gap-2"
+        class="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 gap-3"
         drag-handle-selector=".image-drag-handler"
         :drop-placeholder="dropPlaceholderOptions"
         orientation="horizontal"
@@ -108,15 +108,18 @@
         <Draggable
           v-for="image in activeGallery.images"
           :key="image._id"
+          class="border-gray-300 border-4"
           :class="{
             'col-span-2': image.proportions === 'landscape',
           }"
         >
           <div
             :class="{
-              'border-4 border-fuchsia-600': markedItems.includes(image._id),
+              'outline-fuchsia-600 outline outline-4': markedItems.includes(
+                image._id
+              ),
             }"
-            class="flex flex-col w-full h-full border-4 border-transparent rounded bg-gray-300 image-item relative"
+            class="flex flex-col w-full h-full rounded bg-gray-300 image-item relative"
             @click="markItem(image._id)"
           >
             <img
@@ -234,6 +237,9 @@ export default {
 
     removeGalleryImage(imageId) {
       this.removeImages([imageId]);
+      this.markedItems = this.markedItems.filter(
+        markedItem => markedItem !== imageId
+      );
     },
 
     applyBulkAction() {
@@ -257,6 +263,7 @@ export default {
 
       if (evt.currentTarget.value) {
         await this.fetchGallery(evt.currentTarget.value);
+        this.markedItems = [];
       } else {
         this.resetActiveGalleryState();
       }

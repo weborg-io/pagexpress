@@ -25,7 +25,10 @@
             class="invisible w-0"
             @change="triggerUpload"
           />
-          Upload
+          <span>Upload</span>
+          <span class="icon">
+            <fa :icon="['fa', 'upload']" />
+          </span>
         </label>
         <button
           class="button is-primary"

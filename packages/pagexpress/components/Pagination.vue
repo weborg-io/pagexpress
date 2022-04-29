@@ -1,23 +1,28 @@
 <template>
-  <nav class="pagination" role="navigation" aria-label="pagination">
-    <a
-      :class="currentPage === totalPages ? 'is-disabled' : ''"
-      class="pagination-next"
-      @click.prevent="changePage(currentPage + 1)"
-    >
-      Next
-    </a>
-    <a
-      class="pagination-previous"
-      :class="currentPage !== 1 ? '' : 'is-disabled'"
-      title="This is the first page"
-      @click.prevent="changePage(currentPage - 1)"
-    >
-      Prev
-    </a>
+  <nav
+    class="flex justify-between w-full"
+    role="navigation"
+    aria-label="pagination"
+  >
     <ul class="pagination-list">
       <li>Page {{ currentPage }} of {{ totalPages }}</li>
     </ul>
+    <div class="order-2">
+      <button
+        class="button"
+        :disabled="currentPage === 1"
+        @click="changePage(currentPage - 1)"
+      >
+        Prev
+      </button>
+      <button
+        :disabled="currentPage === totalPages"
+        class="button"
+        @click="changePage(currentPage + 1)"
+      >
+        Next
+      </button>
+    </div>
   </nav>
 </template>
 

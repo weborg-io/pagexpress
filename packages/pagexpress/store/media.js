@@ -6,7 +6,7 @@ const stateModel = {
   media: null,
   currentPage: 1,
   totalPages: 1,
-  itemsPerPage: 50,
+  itemsPerPage: 25,
   search: null,
   sort: '-updatedAt',
 };
@@ -44,6 +44,10 @@ export const mutations = {
 
   REMOVE_MEDIA(state, targetImageId) {
     state.media = state.media.filter(image => image._id !== targetImageId);
+  },
+
+  CHANGE_PAGE(state, targetPage) {
+    state.currentPage = targetPage;
   },
 
   RESET_STATE(state) {
@@ -125,6 +129,19 @@ export const actions = {
   searchImage({ commit, dispatch }, keyword) {
     commit('UPDATE_SEARCH', keyword);
     dispatch('fetchMoreMedia');
+  },
+
+  async changePage({ commit, dispatch, state }, targetPage) {
+    if (
+      targetPage === state.currentPage ||
+      targetPage < 1 ||
+      targetPage > state.totalPages
+    ) {
+      return;
+    }
+
+    commit('CHANGE_PAGE', targetPage);
+    await dispatch('fetchMoreMedia');
   },
 
   resetMediaState({ commit }) {
