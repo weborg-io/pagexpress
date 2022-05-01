@@ -88,6 +88,13 @@
           >
             Apply
           </button>
+          <button
+            class="button"
+            :class="{ hidden: !markedItems.length }"
+            @click="unselectAll"
+          >
+            <span>Clear selection</span>
+          </button>
         </div>
         <button
           class="button is-info"
@@ -120,7 +127,6 @@
               ),
             }"
             class="flex flex-col w-full h-full rounded bg-gray-300 image-item relative"
-            @click="markItem(image._id)"
           >
             <img
               class="object-cover w-full h-full cursor-pointer"
@@ -136,10 +142,23 @@
             </span>
             <button
               class="remove-image button is-small is-danger is-light absolute bottom-1 right-1 z-20"
-              @click="removeGalleryImage(image._id)"
+              @click.stop="removeGalleryImage(image._id)"
             >
               <span class="icon">
                 <fa :icon="['fa', 'trash-alt']" />
+              </span>
+            </button>
+            <button
+              class="mark-item button is-small is-light absolute top-1 left-1 z-20"
+              :class="{ hidden: !markedItems.length }"
+              @click.stop="markItem(image._id)"
+            >
+              <span class="icon">
+                <fa
+                  v-if="markedItems.includes(image._id)"
+                  :icon="['fa', 'minus']"
+                />
+                <fa v-else :icon="['fa', 'plus']" />
               </span>
             </button>
           </div>
@@ -213,6 +232,7 @@ export default {
     this.fetchGalleries();
     this.resetMediaState();
     this.fetchMoreMedia();
+    this.setBreadcrumbsLinks();
   },
 
   methods: {
@@ -252,12 +272,18 @@ export default {
       this.markedItems = [...this.markedItems, itemId];
     },
 
+    unselectAll() {
+      this.markedItems = [];
+    },
+
     removeGalleryImage(imageId) {
       this.removeImages([imageId]);
       this.markedItems = this.markedItems.filter(
         markedItem => markedItem !== imageId
       );
     },
+
+    triggerRemoveGallery() {},
 
     applyBulkAction() {
       switch (this.activeBulkAction) {
@@ -293,6 +319,19 @@ export default {
     closeImagePreview() {
       this.imagePreview = null;
     },
+
+    setBreadcrumbsLinks() {
+      this.$store.commit('UPDATE_BREADCRUMBS_LINKS', [
+        {
+          url: '/',
+          label: 'Home',
+        },
+        {
+          url: `/galleries/`,
+          label: 'Galleries',
+        },
+      ]);
+    },
   },
 };
 </script>
@@ -305,6 +344,7 @@ export default {
   }
 
   &:hover {
+    .mark-item,
     .remove-image,
     .image-drag-handler {
       display: flex;

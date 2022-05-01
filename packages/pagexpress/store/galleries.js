@@ -95,7 +95,7 @@ export const actions = {
     dispatch('resetDirtyState', null, { root: true });
   },
 
-  async removeGallery({ commit, dispatch }) {
+  async removeGallery({ commit, dispatch, state }, callbackFn) {
     if (
       !confirm(`Please, confirm removing ${state.activeGallery.name} gallery`)
     ) {
@@ -107,6 +107,10 @@ export const actions = {
       successMessage: 'Gallery has been removed',
       dispatch,
     });
+
+    if (callbackFn) {
+      callbackFn();
+    }
 
     commit('REMOVE_GALLERY', removedGalleryId);
   },

@@ -72,6 +72,7 @@ export default {
               'faEdit',
               'faExclamationTriangle',
               'faEye',
+              'faCheck',
               'faGripVertical',
               'faMinus',
               'faPaste',

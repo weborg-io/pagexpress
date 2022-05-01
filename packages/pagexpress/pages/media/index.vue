@@ -212,6 +212,7 @@ export default {
   mounted() {
     this.resetMediaState();
     this.fetchMoreMedia();
+    this.setBreadcrumbsLinks();
   },
 
   methods: {
@@ -305,6 +306,19 @@ export default {
       }
 
       this.markedItems = [];
+    },
+
+    setBreadcrumbsLinks() {
+      this.$store.commit('UPDATE_BREADCRUMBS_LINKS', [
+        {
+          url: '/',
+          label: 'Home',
+        },
+        {
+          url: `/media/`,
+          label: 'Media',
+        },
+      ]);
     },
   },
 };
