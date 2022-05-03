@@ -1,5 +1,12 @@
 <template>
-  <div v-if="!hidden" :class="cssClass" class="field-wrapper">
+  <div
+    v-if="!hidden"
+    class="field-wrapper"
+    :class="{
+      'basis-full': ['html', 'image', 'list'].includes(fieldType),
+      [cssClass]: cssClass,
+    }"
+  >
     <FieldText
       v-if="fieldType === 'text'"
       :label="label"

@@ -69,17 +69,14 @@ export default {
   methods: {
     async login() {
       try {
-        await this.$auth
-          .loginWith('local', {
-            data: {
-              email: this.email,
-              password: this.password,
-            },
-          })
-          // eslint-disable-next-line
-          .then(data => console.log('data', data));
+        await this.$auth.loginWith('local', {
+          data: {
+            email: this.email,
+            password: this.password,
+          },
+        });
 
-        this.$router.push('/');
+        await this.$router.push('/');
       } catch (e) {
         this.error = e.response.data.error;
       }
