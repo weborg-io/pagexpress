@@ -75,6 +75,14 @@ export const actions = {
     commit('LOAD_MEDIA', mediaData);
   },
 
+  fetchMediaIfEmpty({ dispatch, state }) {
+    if (state.media && state.media.length) {
+      return;
+    }
+
+    dispatch('fetchMoreMedia');
+  },
+
   async fetchSingleMedia({ commit, dispatch, state }, mediaId) {
     const singleMediaInfo = await showRequestResult({
       request: this.$axios.get(`media/${mediaId}`),

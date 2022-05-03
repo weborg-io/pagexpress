@@ -1,20 +1,27 @@
 <template>
   <div class="app">
-    <NotificationToasts />
     <Navbar />
     <Breadcrumbs />
     <div class="container">
       <nuxt />
     </div>
+    <MediaExplorer />
+    <NotificationToasts />
   </div>
 </template>
 
 <script>
-import { Navbar, NotificationToasts, Breadcrumbs } from '@/components';
+import {
+  Breadcrumbs,
+  MediaExplorer,
+  Navbar,
+  NotificationToasts,
+} from '@/components';
 
 export default {
   components: {
     Breadcrumbs,
+    MediaExplorer,
     Navbar,
     NotificationToasts,
   },

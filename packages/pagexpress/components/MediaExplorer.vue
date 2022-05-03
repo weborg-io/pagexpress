@@ -1,10 +1,10 @@
 <template>
-  <Modal :visible="visible" size="big" :toggle-visibility="toggleVisibility">
+  <Modal :visible="open" size="big" :toggle-visibility="closeExplorer">
     <template #head>
       <MediaExplorerToolbar
         :confirm-callback="confirmCallback"
-        :upload="upload"
-        :confirm-button-label="confirmButtonLabel"
+        :upload="uploadImages"
+        :confirm-button-label="submitButtonLabel || 'Confirm'"
         :active-confirm-button="!!markedItems.length"
         :upload-callback="updateUploadsProgress"
         :keyword="keyword"
@@ -54,86 +54,68 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import MediaExplorerToolbar from '@/components/MediaExplorer/MediaExplorerToolbar';
 import Modal from '@/components/Modal';
+
+const DEFAULT_OPTIONS = {
+  multiple: false,
+  submitButtonLabel: null,
+};
 
 export default {
   name: 'MediaExplorer',
 
   components: { MediaExplorerToolbar, Modal },
 
-  props: {
-    media: {
-      type: Array,
-      default: () => [],
-    },
-
-    visible: {
-      type: Boolean,
-      default: false,
-    },
-
-    multipleChoose: {
-      type: Boolean,
-      default: true,
-    },
-
-    toggleVisibility: {
-      type: Function,
-      required: true,
-    },
-
-    upload: {
-      type: Function,
-      required: true,
-    },
-
-    searchImage: {
-      type: Function,
-      required: true,
-    },
-
-    keyword: {
-      type: String,
-      default: null,
-    },
-
-    submitAction: {
-      type: Function,
-      required: true,
-    },
-
-    confirmButtonLabel: {
-      type: String,
-      default: 'Confirm',
-    },
-  },
+  emits: ['openMediaExplorer', 'closeMediaExplorer'],
 
   data() {
     return {
       markedItems: [],
       uploadPercentage: 0,
       timeout: null,
+      open: false,
+      submitAction: null,
+      keyword: '',
+      ...DEFAULT_OPTIONS,
     };
   },
 
-  watch: {
-    visible(value) {
-      if (value === false) {
-        return;
-      }
+  computed: {
+    ...mapState('media', ['media', 'search']),
+  },
 
-      this.markedItems = [];
-
-      if (this.keyword) {
-        this.searchImage(null);
+  mounted() {
+    this.fetchMediaIfEmpty();
+    this.$root.$on(
+      'openMediaExplorer',
+      (onSubmit, { multiple, submitButtonLabel } = DEFAULT_OPTIONS) => {
+        this.open = true;
+        this.submitAction = onSubmit;
+        this.multiple = multiple;
+        this.submitButtonLabel = submitButtonLabel;
       }
-    },
+    );
+    this.$root.$on('closeMediaExplorer', onClose => {
+      this.submitAction = onClose;
+    });
+  },
+
+  beforeDestroy() {
+    this.$root.$off('openMediaExplorer');
   },
 
   methods: {
+    ...mapActions('media', [
+      'fetchMediaIfEmpty',
+      'uploadImages',
+      'searchImage',
+      'resetMediaState',
+    ]),
+
     markItem(itemId) {
-      if (!this.multipleChoose) {
+      if (!this.multiple) {
         this.markedItems = [];
       } else if (this.markedItems.includes(itemId)) {
         this.markedItems = this.markedItems.filter(
@@ -150,8 +132,9 @@ export default {
       const pickedMediaItems = this.media.filter(mediaItem =>
         this.markedItems.includes(mediaItem._id)
       );
-      this.submitAction(pickedMediaItems);
-      this.toggleVisibility();
+      const submitData = this.multiple ? pickedMediaItems : pickedMediaItems[0];
+      this.submitAction(submitData);
+      this.closeExplorer();
     },
 
     updateUploadsProgress(event) {
@@ -169,10 +152,24 @@ export default {
     triggerSearch(evt) {
       if (this.timeout) clearTimeout(this.timeout);
 
-      this.timeout = setTimeout(
-        this.searchImage.bind(null, evt.target.value),
-        200
-      );
+      this.timeout = setTimeout(this.search.bind(null, evt.target.value), 200);
+    },
+
+    resetExplorerState() {
+      this.submitAction = null;
+      this.markedItems = [];
+      this.submitButtonLabel = DEFAULT_OPTIONS.submitButtonLabel;
+      this.multiple = DEFAULT_OPTIONS.multiple;
+      this.resetMediaState();
+
+      if (this.keyword) {
+        this.searchImage(null);
+      }
+    },
+
+    closeExplorer() {
+      this.open = false;
+      this.resetExplorerState();
     },
   },
 };

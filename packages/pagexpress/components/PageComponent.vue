@@ -42,6 +42,7 @@
         <PageComponentData
           :fields="componentPattern.fields"
           :component-name="componentPattern.name"
+          :component-id="component._id"
           :data="component.data"
           :on-update-data="updateData"
         />

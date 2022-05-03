@@ -38,6 +38,13 @@
       @update="update"
     />
 
+    <FieldImage
+      v-if="fieldType === 'image'"
+      :label="label"
+      :value="value || undefined"
+      @update="update"
+    />
+
     <FieldHeader
       v-if="fieldType === 'header'"
       :label="label"
@@ -61,6 +68,7 @@ import {
   FieldDateTime,
   FieldHeader,
   FieldHtml,
+  FieldImage,
   FieldList,
   FieldText,
 } from './FieldTypes';
@@ -74,6 +82,7 @@ export default {
     FieldDateTime,
     FieldHeader,
     FieldHtml,
+    FieldImage,
     FieldList,
     FieldText,
   },

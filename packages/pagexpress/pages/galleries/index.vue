@@ -41,7 +41,7 @@
         <button
           class="button is-danger"
           :disabled="!activeGallery"
-          @click="removeGallery"
+          @click="triggerRemoveGallery"
         >
           Remove gallery
         </button>
@@ -166,17 +166,6 @@
       </Container>
     </div>
 
-    <MediaExplorer
-      confirm-button-label="Add to gallery"
-      :submit-action="addImages"
-      :upload="uploadImages"
-      :keyword="search"
-      :search-image="searchImage"
-      :media="media"
-      :toggle-visibility="toggleMediaExplorerVisibility"
-      :visible="mediaExplorerVisible"
-    ></MediaExplorer>
-
     <Modal
       :visible="!!imagePreview"
       :toggle-visibility="closeImagePreview"
@@ -189,7 +178,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import { Container, Draggable } from 'vue-smooth-dnd';
-import { Toolbar, MediaExplorer, Modal } from '@/components';
+import { Toolbar, Modal } from '@/components';
 import FieldText from '@/components/FieldTypes/FieldText';
 
 const BULK_ACTIONS = {
@@ -201,7 +190,6 @@ export default {
     FieldText,
     Toolbar,
     Modal,
-    MediaExplorer,
     Container,
     Draggable,
   },
@@ -210,7 +198,6 @@ export default {
     return {
       bulkActions: Object.values(BULK_ACTIONS),
       activeBulkAction: '',
-      mediaExplorerVisible: false,
       newGalleryName: '',
       markedItems: [],
       imagePreview: null,
@@ -224,25 +211,15 @@ export default {
 
   computed: {
     ...mapState('galleries', ['galleries', 'activeGallery']),
-    ...mapState('media', ['media', 'search']),
     ...mapState(['isDirty']),
   },
 
   mounted() {
     this.fetchGalleries();
-    this.resetMediaState();
-    this.fetchMoreMedia();
     this.setBreadcrumbsLinks();
   },
 
   methods: {
-    ...mapActions('media', [
-      'fetchMoreMedia',
-      'uploadImages',
-      'removeImage',
-      'searchImage',
-      'resetMediaState',
-    ]),
     ...mapActions('galleries', [
       'addGallery',
       'addImages',
@@ -257,7 +234,10 @@ export default {
     ]),
 
     toggleMediaExplorerVisibility() {
-      this.mediaExplorerVisible = !this.mediaExplorerVisible;
+      this.$root.$emit('openMediaExplorer', this.addImages, {
+        multiple: true,
+        submitButtonLabel: 'Add to gallery',
+      });
     },
 
     markItem(itemId) {
@@ -283,7 +263,11 @@ export default {
       );
     },
 
-    triggerRemoveGallery() {},
+    triggerRemoveGallery() {
+      this.removeGallery(() => {
+        this.markedItems = [];
+      });
+    },
 
     applyBulkAction() {
       switch (this.activeBulkAction) {

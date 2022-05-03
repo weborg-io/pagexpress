@@ -97,7 +97,7 @@ export const actions = {
 
   async removeGallery({ commit, dispatch, state }, callbackFn) {
     if (
-      !confirm(`Please, confirm removing ${state.activeGallery.name} gallery`)
+      !confirm(`Please, confirm removing "${state.activeGallery.name}" gallery`)
     ) {
       return;
     }

@@ -18,6 +18,7 @@
           <PageComponentData
             :fields="componentPattern.fields"
             :component-name="componentPattern.name"
+            :component-id="component._id"
             :node-label="component.treeNodeLabel"
             :data="component.data"
             :on-update-data="updateData"
@@ -71,6 +72,11 @@ export default {
     },
 
     component: {
+      type: Object,
+      default: () => {},
+    },
+
+    componentData: {
       type: Object,
       default: () => {},
     },
