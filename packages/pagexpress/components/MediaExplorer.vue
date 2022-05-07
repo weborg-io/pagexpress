@@ -21,7 +21,7 @@
         :value.prop="uploadPercentage"
       ></progress>
     </template>
-    <template>
+    <template #default>
       <div
         v-if="media"
         class="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 gap-4"

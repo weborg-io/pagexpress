@@ -52,6 +52,13 @@
       @update="update"
     />
 
+    <FieldGallery
+      v-if="fieldType === 'gallery'"
+      :label="label"
+      :value="value || undefined"
+      @update="update"
+    />
+
     <FieldHeader
       v-if="fieldType === 'header'"
       :label="label"
@@ -73,6 +80,7 @@ import {
   FieldBoolean,
   FieldClientImage,
   FieldDateTime,
+  FieldGallery,
   FieldHeader,
   FieldHtml,
   FieldImage,
@@ -87,6 +95,7 @@ export default {
     FieldBoolean,
     FieldClientImage,
     FieldDateTime,
+    FieldGallery,
     FieldHeader,
     FieldHtml,
     FieldImage,
