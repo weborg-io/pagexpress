@@ -420,7 +420,7 @@ export default {
     }
 
     &--copy {
-      background-color: rgba(50, 152, 220, 0.1);
+      background-color: rgb(50 152 220 / 10%);
 
       .tree-node__root--copy {
         background-color: transparent;

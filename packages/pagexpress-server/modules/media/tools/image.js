@@ -36,6 +36,7 @@ const getImageTransformer = (image, { width, height, format }) => {
       width: width ? parseInt(width) : undefined,
       height: height ? parseInt(height) : undefined,
       withoutEnlargement: true,
+      fit: sharp.fit.inside,
     });
   }
 

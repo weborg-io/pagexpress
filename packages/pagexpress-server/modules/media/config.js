@@ -14,9 +14,9 @@ module.exports = {
     updateMedia: '/media/:mediaId',
     deleteMedia: '/media/:mediaId',
     uploadImages: '/media/image/upload',
-    getGallery: '/gallery/:galleryId?',
-    createGallery: '/gallery',
-    updateGallery: '/gallery/:galleryId',
-    deleteGallery: '/gallery/:galleryId',
+    getGallery: '/galleries/:galleryId?',
+    createGallery: '/galleries',
+    updateGallery: '/galleries/:galleryId',
+    deleteGallery: '/galleries/:galleryId',
   },
 };

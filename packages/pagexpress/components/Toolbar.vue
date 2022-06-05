@@ -1,13 +1,13 @@
 <template>
   <div class="toolbar">
     <div class="container toolbar__inner">
-      <div class="toolbar__left-side">
+      <div v-if="isLeft" class="toolbar__left-side">
         <slot name="left"></slot>
       </div>
-      <div class="toolbar__middle">
+      <div v-if="isMiddle" class="toolbar__middle">
         <slot name="middle"></slot>
       </div>
-      <div class="toolbar__right-side">
+      <div v-if="isRight" class="toolbar__right-side">
         <slot name="right"></slot>
       </div>
     </div>
@@ -17,6 +17,20 @@
 <script>
 export default {
   name: 'Toolbar',
+
+  computed: {
+    isLeft() {
+      return !!this.$slots.left;
+    },
+
+    isMiddle() {
+      return !!this.$slots.middle;
+    },
+
+    isRight() {
+      return !!this.$slots.right;
+    },
+  },
 };
 </script>
 

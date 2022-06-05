@@ -5,7 +5,7 @@
  */
 export const formatDate = dateObject =>
   dateObject
-    .toLocaleDateString('en-GB', {
+    .toLocaleDateString('en-US', {
       day: 'numeric',
       month: 'short',
       year: 'numeric',

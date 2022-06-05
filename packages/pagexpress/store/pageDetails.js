@@ -63,15 +63,29 @@ export const mutations = {
   },
 
   UPDATE_COMPONENT(state, newComponentData) {
-    state.components = state.components.map(component => {
+    let changedComponentIndex = null;
+    state.components.some((component, index) => {
       if (component._id === newComponentData._id) {
-        component.data = {
-          ...(component.data || {}),
-          ...(newComponentData.data || {}),
-        };
+        changedComponentIndex = index;
+
+        return true;
       }
 
-      return component;
+      return false;
+    });
+
+    if (changedComponentIndex === null) {
+      return;
+    }
+
+    const targetComponent = state.components[changedComponentIndex];
+
+    state.components.splice(changedComponentIndex, 1, {
+      ...targetComponent,
+      data: {
+        ...(targetComponent.data || {}),
+        ...(newComponentData.data || {}),
+      },
     });
   },
 

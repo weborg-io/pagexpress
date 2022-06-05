@@ -1,17 +1,21 @@
 import FieldBoolean from './FieldBoolean';
+import FieldClientImage from './FieldClientImage';
 import FieldDateTime from './FieldDateTime';
-import FieldHtml from './FieldHtml';
+import FieldGallery from './FieldGallery';
 import FieldHeader from './FieldHeader';
+import FieldHtml from './FieldHtml';
+import FieldImage from './FieldImage';
 import FieldList from './FieldList';
 import FieldText from './FieldText';
-import FieldClientImage from './FieldClientImage';
 
 export {
   FieldBoolean,
+  FieldClientImage,
   FieldDateTime,
-  FieldHtml,
+  FieldGallery,
   FieldHeader,
+  FieldHtml,
+  FieldImage,
   FieldList,
   FieldText,
-  FieldClientImage,
 };

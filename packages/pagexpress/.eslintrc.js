@@ -3,19 +3,15 @@ module.exports = {
   env: {
     browser: true,
     node: true,
+    es2021: true,
   },
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: '@babel/eslint-parser',
+    requireConfigFile: false,
   },
-  extends: [
-    '@nuxtjs',
-    'prettier',
-    'prettier/vue',
-    'plugin:prettier/recommended',
-    'plugin:nuxt/recommended',
-  ],
-  plugins: ['prettier'],
-  // add your custom rules here
+  extends: ['@nuxtjs', 'plugin:nuxt/recommended', 'prettier'],
+  plugins: [],
+
   rules: {
     'vue/html-self-closing': [
       'error',
@@ -27,5 +23,7 @@ module.exports = {
         },
       },
     ],
+    'vue/multi-word-component-names': 'off',
+    semi: ['error', 'always'],
   },
 };

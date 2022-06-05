@@ -1,8 +1,8 @@
 <template>
   <div class="page-component-data">
     <Field
-      v-for="(field, fieldIndex) in fields"
-      :key="fieldIndex"
+      v-for="(field, index) in fields"
+      :key="getFieldId(index)"
       :field-type="field.type"
       :label="field.label"
       :options="field.options"
@@ -40,11 +40,27 @@ export default {
       type: Function,
       required: true,
     },
+    componentId: {
+      type: String,
+      required: true,
+    },
+  },
+
+  data() {
+    return { fieldHash: null };
+  },
+
+  mounted() {
+    this.fieldHash = Math.floor(Math.random() * 9999999);
   },
 
   methods: {
     updateData(fieldName, value) {
       this.onUpdateData(fieldName, value);
+    },
+
+    getFieldId(index) {
+      return `${this.componentId}-${this.fieldHash}-${index}`;
     },
   },
 };

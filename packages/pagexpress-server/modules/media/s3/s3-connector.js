@@ -8,6 +8,11 @@ class S3Connector {
     this.s3 = require('./aws-s3')(config.aws);
   }
 
+  /**
+   * @param bufferImageObject
+   * @param targetKey
+   * @returns {object}
+   */
   getS3Params(bufferImageObject, targetKey) {
     return {
       ContentType: `image/${bufferImageObject.info.format}`,
@@ -18,7 +23,6 @@ class S3Connector {
   }
 
   /**
-   *
    * @param params
    * @returns {Promise<null|Request<S3.GetObjectOutput>>}
    */
@@ -42,7 +46,7 @@ class S3Connector {
   async createImageVersion(mediaId, options) {
     const originImageKey = this.utils.getMediaKey(mediaId);
     const originImage = await this.getObjectIfExists({
-      Bucket: this.config.s3Bucket,
+      Bucket: this.config.aws.s3Bucket,
       Key: originImageKey,
     });
 
@@ -56,7 +60,7 @@ class S3Connector {
     const format = options.format || this.config.defaultImageFormat;
     await this.upload({ data: imageStream, info: { format } }, targetKey);
     return this.s3.getObject({
-      Bucket: this.config.s3Bucket,
+      Bucket: this.config.aws.s3Bucket,
       Key: targetKey,
     });
   }
@@ -80,7 +84,7 @@ class S3Connector {
     try {
       console.log(objectKey);
       const params = {
-        Bucket: this.config.s3Bucket,
+        Bucket: this.config.aws.s3Bucket,
         Key: objectKey,
       };
       await this.s3.headObject(params).promise();

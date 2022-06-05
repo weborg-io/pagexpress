@@ -9,11 +9,9 @@
     :drop-placeholder="dropPlaceholderOptions"
     @drop="onDrop"
   >
-    <slot />
+    <slot></slot>
     <div class="draggable-forms-container__actions">
-      <button class="button is-small is-success" @click="addItem">
-        Add +
-      </button>
+      <button class="button is-small is-success" @click="addItem">Add +</button>
     </div>
   </Container>
 </template>

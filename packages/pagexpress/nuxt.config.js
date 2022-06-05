@@ -1,3 +1,6 @@
+/* eslint-disable-next-line */
+const path = require('path');
+
 export default {
   ssr: false,
   /*
@@ -53,6 +56,7 @@ export default {
     '@nuxtjs/eslint-module',
     // Doc: https://github.com/nuxt-community/stylelint-module
     '@nuxtjs/stylelint-module',
+    '@nuxt/postcss8',
     [
       'nuxt-fontawesome',
       {
@@ -61,19 +65,22 @@ export default {
           {
             set: '@fortawesome/free-solid-svg-icons',
             icons: [
-              'faEdit',
-              'faGripVertical',
-              'faMinus',
-              'faPlus',
-              'faPaste',
+              'faArrowsAlt',
+              'faClone',
               'faCopy',
               'faCut',
-              'faTrashAlt',
-              'faClone',
+              'faEdit',
+              'faExclamationTriangle',
+              'faEye',
+              'faCheck',
+              'faGripVertical',
+              'faMinus',
+              'faPaste',
+              'faPlus',
               'faSearch',
               'faTimes',
-              'faEye',
-              'faExclamationTriangle',
+              'faTrashAlt',
+              'faUpload',
               'faUserEdit',
             ],
           },
@@ -121,7 +128,11 @@ export default {
     },
     postcss: {
       plugins: {
+        'postcss-import': true,
+        'tailwindcss/nesting': {},
+        tailwindcss: path.resolve(__dirname, './tailwind.config.js'),
         'postcss-nested': {},
+        autoprefixer: {},
       },
       preset: {
         features: {

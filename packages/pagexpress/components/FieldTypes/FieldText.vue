@@ -1,5 +1,5 @@
 <template>
-  <div class="field is-fullwidth">
+  <div class="field w-full" :class="customClass">
     <label :for="fieldId" class="label">{{ label }}</label>
     <div class="control">
       <input
@@ -55,6 +55,11 @@ export default {
     },
 
     placeholder: {
+      type: String,
+      default: '',
+    },
+
+    customClass: {
       type: String,
       default: '',
     },

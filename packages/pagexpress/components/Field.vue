@@ -1,5 +1,12 @@
 <template>
-  <div v-if="!hidden" :class="cssClass" class="field-wrapper">
+  <div
+    v-if="!hidden"
+    class="field-wrapper"
+    :class="{
+      'basis-full': ['html', 'image', 'list'].includes(fieldType),
+      [cssClass]: cssClass,
+    }"
+  >
     <FieldText
       v-if="fieldType === 'text'"
       :label="label"
@@ -38,6 +45,20 @@
       @update="update"
     />
 
+    <FieldImage
+      v-if="fieldType === 'image'"
+      :label="label"
+      :value="value || undefined"
+      @update="update"
+    />
+
+    <FieldGallery
+      v-if="fieldType === 'gallery'"
+      :label="label"
+      :value="value || undefined"
+      @update="update"
+    />
+
     <FieldHeader
       v-if="fieldType === 'header'"
       :label="label"
@@ -59,8 +80,10 @@ import {
   FieldBoolean,
   FieldClientImage,
   FieldDateTime,
+  FieldGallery,
   FieldHeader,
   FieldHtml,
+  FieldImage,
   FieldList,
   FieldText,
 } from './FieldTypes';
@@ -72,8 +95,10 @@ export default {
     FieldBoolean,
     FieldClientImage,
     FieldDateTime,
+    FieldGallery,
     FieldHeader,
     FieldHtml,
+    FieldImage,
     FieldList,
     FieldText,
   },

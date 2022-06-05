@@ -3,7 +3,6 @@
     <Toolbar>
       <template #left>
         <button class="button is-info" @click="addField">Add field +</button>
-
         <button class="button is-info" @click="addFieldset">
           Add fieldset +
         </button>
@@ -21,8 +20,9 @@
         </button>
       </template>
 
-      <template v-if="unsavedState" #right>
+      <template #right>
         <button
+          :disabled="!unsavedState"
           class="button is-success"
           @click="updateComponentPattern({ componentId })"
         >

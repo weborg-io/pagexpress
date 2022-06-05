@@ -11,15 +11,17 @@
             Components
           </nuxt-link>
           <nuxt-link to="/menus" class="navbar-item"> Menu </nuxt-link>
+          <nuxt-link to="/media" class="navbar-item"> Media </nuxt-link>
+          <nuxt-link to="/galleries" class="navbar-item">Galleries</nuxt-link>
         </div>
       </div>
       <div class="navbar-end navbar__action">
         <button v-if="isAuthenticated" class="button is-light" @click="logout">
           <strong>Logout</strong>
         </button>
-        <nuxt-link v-else class="button is-primary" to="/sign-in"
-          ><strong>Sign In</strong></nuxt-link
-        >
+        <nuxt-link v-else class="button is-primary" to="/sign-in">
+          <strong>Sign In</strong>
+        </nuxt-link>
       </div>
     </div>
   </nav>
