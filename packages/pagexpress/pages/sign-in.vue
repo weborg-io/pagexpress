@@ -36,12 +36,6 @@
               </button>
             </div>
           </form>
-          <div class="has-text-centered" style="margin-top: 2rem">
-            <p>
-              Don't have an account?
-              <nuxt-link to="/sign-up">Create account</nuxt-link>
-            </p>
-          </div>
         </div>
       </div>
     </div>
