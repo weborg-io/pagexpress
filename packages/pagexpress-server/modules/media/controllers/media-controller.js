@@ -59,7 +59,7 @@ class MediaController {
     try {
       if (mediaId) {
         const media = await Media.findById(mediaId);
-        res.json(media);
+        res.json(this.enrichMediaItem(media));
 
         return;
       }
@@ -79,7 +79,7 @@ class MediaController {
 
       res.json({
         currentPage,
-        data,
+        data: data.map(item => this.enrichMediaItem(item)),
         itemsPerPage,
         totalPages,
       });
@@ -88,12 +88,21 @@ class MediaController {
     }
   }
 
-  getImageUrl(mediaId) {
+  enrichMediaItem(media) {
     const { apiBaseUrl } = this.appConfig;
+    const mediaData = media.toObject();
+
+    return {
+      ...mediaData,
+      url: `${apiBaseUrl}${mediaData.url}`,
+    };
+  }
+
+  getImageUrl(mediaId) {
     const { routes } = this.mediaConfig;
     const imageEndpoint = routes.getImage.split(':').shift();
 
-    return `${apiBaseUrl}${imageEndpoint}${mediaId}`;
+    return `${imageEndpoint}${mediaId}`;
   }
 
   async uploadSingleImage(mediaId, file) {
@@ -139,7 +148,7 @@ class MediaController {
       });
       const mediaObjects = await Promise.all(imagesUploadPromises);
 
-      res.json(mediaObjects);
+      res.json(mediaObjects.map(item => this.enrichMediaItem(item)));
       files.forEach(file => removeTempFile(file.path));
     } catch (err) {
       next(err);
@@ -162,7 +171,7 @@ class MediaController {
         req.body,
         { new: true }
       );
-      res.json(updateResult);
+      res.json(this.enrichMediaItem(updateResult));
     } catch (err) {
       next(err);
     }
