@@ -15,7 +15,7 @@ module.exports = (accessMiddlewares, pxConfig = {}) => {
     ...pxConfig,
     media: undefined,
   });
-  const galleryController = new GalleryController();
+  const galleryController = new GalleryController(pxConfig);
 
   router.get(routes.getImage, mediaController.getImage);
   router.get(
