@@ -1,10 +1,11 @@
 const path = require('path');
 const { Media, updateMediaValidationSchema } = require('../models/Media');
 const { removeTempFile } = require('../local/local-upload');
-const { BadRequest } = require('../../../utils/errors');
+const { BadRequest, NotFound } = require('../../../utils/errors');
 const { S3Connector, s3CommonUtils } = require('../s3');
 const { image } = require('../tools');
 const ListFeatures = require('../../../utils/ListFeatures');
+const { enrichMediaItem } = require('../tools/image');
 
 class MediaController {
   constructor(moduleConfig, pxConfig) {
@@ -59,9 +60,10 @@ class MediaController {
     try {
       if (mediaId) {
         const media = await Media.findById(mediaId);
-        res.json(this.enrichMediaItem(media));
 
-        return;
+        return media
+          ? res.json(enrichMediaItem(media, this.appConfig.apiBaseUrl))
+          : next(new NotFound('Media not found'));
       }
 
       const sortableFields = ['name', 'mimetype', 'createdAt', 'updatedAt'];
@@ -79,23 +81,15 @@ class MediaController {
 
       res.json({
         currentPage,
-        data: data.map(item => this.enrichMediaItem(item)),
+        data: data.map(item =>
+          enrichMediaItem(item, this.appConfig.apiBaseUrl)
+        ),
         itemsPerPage,
         totalPages,
       });
     } catch (err) {
       next(err);
     }
-  }
-
-  enrichMediaItem(media) {
-    const { apiBaseUrl } = this.appConfig;
-    const mediaData = media.toObject();
-
-    return {
-      ...mediaData,
-      url: `${apiBaseUrl}${mediaData.url}`,
-    };
   }
 
   getImageUrl(mediaId) {
@@ -148,7 +142,11 @@ class MediaController {
       });
       const mediaObjects = await Promise.all(imagesUploadPromises);
 
-      res.json(mediaObjects.map(item => this.enrichMediaItem(item)));
+      res.json(
+        mediaObjects.map(item =>
+          enrichMediaItem(item, this.appConfig.apiBaseUrl)
+        )
+      );
       files.forEach(file => removeTempFile(file.path));
     } catch (err) {
       next(err);
@@ -171,7 +169,7 @@ class MediaController {
         req.body,
         { new: true }
       );
-      res.json(this.enrichMediaItem(updateResult));
+      res.json(enrichMediaItem(updateResult, this.appConfig.apiBaseUrl));
     } catch (err) {
       next(err);
     }

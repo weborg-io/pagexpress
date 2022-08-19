@@ -59,8 +59,23 @@ const process = (image, options = {}) => {
   return transformer.toBuffer({ resolveWithObject: true });
 };
 
+/**
+ * @param {object} media
+ * @param {string} apiBaseUrl
+ * @returns {object&{url: string}}
+ */
+const enrichMediaItem = (media, apiBaseUrl) => {
+  const mediaData = media.toObject ? media.toObject() : media;
+
+  return {
+    ...mediaData,
+    url: `${apiBaseUrl}${mediaData.url}`,
+  };
+};
+
 module.exports = {
   process,
   getMetadata,
   getImageTransformer,
+  enrichMediaItem,
 };

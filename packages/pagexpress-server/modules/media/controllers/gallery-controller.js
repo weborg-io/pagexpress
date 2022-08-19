@@ -1,12 +1,15 @@
 const { Gallery, galleryValidationSchema } = require('../models/Gallery');
 const { BadRequest, NotFound } = require('../../../utils/errors');
+const { enrichMediaItem } = require('../tools/image');
 
 class GalleryController {
-  constructor() {
+  constructor(pxConfig) {
+    this.appConfig = pxConfig;
     this.getGallery = this.getGallery.bind(this);
     this.createGallery = this.createGallery.bind(this);
     this.updateGallery = this.updateGallery.bind(this);
     this.deleteGallery = this.deleteGallery.bind(this);
+    this.enrichGallery = this.enrichGallery.bind(this);
   }
 
   async getGallery(req, res, next) {
@@ -23,7 +26,7 @@ class GalleryController {
           .exec();
 
         if (gallery) {
-          res.json(gallery);
+          res.json(this.enrichGallery(gallery));
         } else {
           next(new NotFound('Gallery not found'));
         }
@@ -32,10 +35,23 @@ class GalleryController {
       }
 
       const galleries = await Gallery.find().select('name');
-      res.json(galleries);
+      res.json(galleries.map(this.enrichGallery));
     } catch (err) {
       next(err);
     }
+  }
+
+  enrichGallery(gallery) {
+    const galleryData = gallery.toObject ? gallery.toObject() : gallery;
+
+    return {
+      ...galleryData,
+      images: galleryData.images
+        ? galleryData.images.map(image =>
+            enrichMediaItem(image, this.appConfig.apiBaseUrl)
+          )
+        : undefined,
+    };
   }
 
   async createGallery(req, res, next) {
@@ -72,7 +88,7 @@ class GalleryController {
         req.body,
         { new: true }
       );
-      res.json(updateResult);
+      res.json(this.enrichGallery(updateResult));
     } catch (err) {
       next(err);
     }
