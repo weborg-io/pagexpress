@@ -6,7 +6,7 @@ class GalleryController {
   constructor(pxConfig) {
     this.appConfig = pxConfig;
     this.getGallery = this.getGallery.bind(this);
-    this.getGalleryByName = this.getGalleryByName.bind(this);
+    this.getGalleryBySlug = this.getGalleryBySlug.bind(this);
     this.createGallery = this.createGallery.bind(this);
     this.updateGallery = this.updateGallery.bind(this);
     this.deleteGallery = this.deleteGallery.bind(this);
@@ -35,18 +35,18 @@ class GalleryController {
         return;
       }
 
-      const galleries = await Gallery.find().select('name');
+      const galleries = await Gallery.find().select('slug');
       res.json(galleries.map(this.enrichGallery));
     } catch (err) {
       next(err);
     }
   }
 
-  async getGalleryByName(req, res, next) {
-    const { name } = req.params;
+  async getGalleryBySlug(req, res, next) {
+    const { slug } = req.params;
 
     try {
-      const gallery = await Gallery.findOne({ name })
+      const gallery = await Gallery.findOne({ slug })
         .populate({
           path: 'images',
           model: 'Media',

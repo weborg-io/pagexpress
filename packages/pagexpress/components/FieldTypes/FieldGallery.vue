@@ -10,7 +10,7 @@
           :value="gallery._id"
           :selected="value && value.galleryId === gallery._id"
         >
-          {{ gallery.name }}
+          {{ gallery.slug }}
         </option>
       </select>
     </div>
@@ -20,7 +20,7 @@
 
 <script>
 import { v4 as uuidv4 } from 'uuid';
-import { mapState, mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 export default {
   name: 'FieldGallery',
@@ -81,7 +81,7 @@ export default {
     getGalleryData(gallery) {
       return {
         galleryId: gallery._id,
-        name: gallery.name,
+        name: gallery.slug,
         images: gallery.images,
       };
     },
