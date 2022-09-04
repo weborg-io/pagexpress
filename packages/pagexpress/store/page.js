@@ -1,5 +1,5 @@
 import _omit from 'lodash/omit';
-import { showRequestResult, getSlug, downloadJsonFile } from '@/utils';
+import { downloadJsonFile, getSlug, showRequestResult } from '@/utils';
 
 export const state = () => ({
   newPageId: null,
@@ -84,11 +84,12 @@ export const actions = {
   },
 
   async updatePage({ commit, dispatch, state }) {
-    const { type, url, name } = state.mainData;
+    const { type, url, name, slug } = state.mainData;
 
     const updatedMainPageData = await showRequestResult({
       request: this.$axios.put(`pages/${state.mainData._id}`, {
         name,
+        slug,
         url,
         type,
         attributes: state.pageAttributes,

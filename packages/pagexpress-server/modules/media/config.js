@@ -15,6 +15,7 @@ module.exports = {
     deleteMedia: '/media/:mediaId',
     uploadImages: '/media/image/upload',
     getGallery: '/galleries/:galleryId?',
+    getGalleryByName: '/gallery-by-name/:name?',
     createGallery: '/galleries',
     updateGallery: '/galleries/:galleryId',
     deleteGallery: '/galleries/:galleryId',

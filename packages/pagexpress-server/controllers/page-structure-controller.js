@@ -1,55 +1,59 @@
 const { Page } = require('../models/Page');
-const { ComponentPattern } = require('../models/ComponentPattern');
-const { buildPageStructure } = require('../utils/page-structure');
-const R = require('ramda');
 const { NotFound } = require('../utils/errors');
+const { getPageStructureData } = require('../utils/page-structure');
+
+const enrichPageData = async pageData =>
+  pageData
+    .select('name slug url pageDetails attributes')
+    .populate({
+      path: 'pageDetails',
+      model: 'PageDetails',
+      select:
+        'name country default title description components createdAt updatedAt',
+      populate: {
+        path: 'country',
+        select: 'name code language -_id',
+      },
+    })
+    .populate({
+      path: 'type',
+      select: 'name -_id',
+    })
+    .exec();
 
 const getPageStructure = async (req, res, next) => {
   const { pageId } = req.params;
 
   try {
-    const pageData = await Page.findById(pageId)
-      .select('name url pageDetails attributes')
-      .populate({
-        path: 'pageDetails',
-        model: 'PageDetails',
-        select: 'name country default title description components createdAt updatedAt',
-        populate: {
-          path: 'country',
-          select: 'name code language -_id',
-        },
-      })
-      .populate({
-        path: 'type',
-        select: 'name -_id',
-      })
-      .exec();
+    const pageData = Page.findById(pageId);
+    const enrichedPageData = await enrichPageData(pageData);
 
     if (!pageData) {
-      throw new NotFound(`Page with ID ${pageId} doesn't exist`);
+      next(new NotFound(`Page with ID ${pageId} doesn't exist`));
     }
 
-    const componentPatterns = await ComponentPattern.find().exec();
-    const fullPageData = pageData.toObject();
+    const pageStructure = await getPageStructureData(enrichedPageData);
 
-    const pageVariants = fullPageData.pageDetails.map(details => {
-      return {
-        ...details,
-        components: buildPageStructure(details.components, componentPatterns),
-      };
-    });
+    res.json(pageStructure);
+  } catch (err) {
+    next(err);
+  }
+};
 
-    const pageVariantsSelectedData = {
-      ...R.pick(['attributes', 'name', 'url', 'type'], fullPageData),
-      variants: pageVariants.map(variant => {
-        return {
-          ...R.pick(['name', 'country', 'title', 'description', 'createdAt', 'updatedAt'], variant),
-          components: variant.components.map(({ name, data, components }) => ({ name, data, components })),
-        };
-      }),
-    };
+const getPageStructureBySlug = async (req, res, next) => {
+  const { slug } = req.params;
 
-    res.json(pageVariantsSelectedData);
+  try {
+    const pageData = Page.findOne({ slug });
+    const enrichedPageData = await enrichPageData(pageData);
+
+    if (!pageData) {
+      next(new NotFound(`Page with slug ${slug} doesn't exist`));
+    }
+
+    const pageStructure = await getPageStructureData(enrichedPageData);
+
+    res.json(pageStructure);
   } catch (err) {
     next(err);
   }
@@ -57,4 +61,5 @@ const getPageStructure = async (req, res, next) => {
 
 module.exports = {
   getPageStructure,
+  getPageStructureBySlug,
 };

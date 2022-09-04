@@ -6,6 +6,7 @@ class GalleryController {
   constructor(pxConfig) {
     this.appConfig = pxConfig;
     this.getGallery = this.getGallery.bind(this);
+    this.getGalleryByName = this.getGalleryByName.bind(this);
     this.createGallery = this.createGallery.bind(this);
     this.updateGallery = this.updateGallery.bind(this);
     this.deleteGallery = this.deleteGallery.bind(this);
@@ -36,6 +37,28 @@ class GalleryController {
 
       const galleries = await Gallery.find().select('name');
       res.json(galleries.map(this.enrichGallery));
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getGalleryByName(req, res, next) {
+    const { name } = req.params;
+
+    try {
+      const gallery = await Gallery.findOne({ name })
+        .populate({
+          path: 'images',
+          model: 'Media',
+          select: 'name url width height mimetype',
+        })
+        .exec();
+
+      if (gallery) {
+        res.json(this.enrichGallery(gallery));
+      } else {
+        next(new NotFound('Gallery not found'));
+      }
     } catch (err) {
       next(err);
     }

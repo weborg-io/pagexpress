@@ -50,6 +50,12 @@ module.exports = (accessMiddlewares, pxConfig = {}) => {
     grandAccess('readAny', resourceName),
     galleryController.getGallery
   );
+  router.get(
+    routes.getGalleryByName,
+    auth,
+    grandAccess('readAny', resourceName),
+    galleryController.getGalleryByName
+  );
   router.post(
     routes.createGallery,
     auth,
