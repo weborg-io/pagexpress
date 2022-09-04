@@ -22,6 +22,21 @@
           </div>
           <div class="column">
             <div class="field is-fullwidth">
+              <label for="slug" class="label">Page slug</label>
+              <div class="control">
+                <input
+                  id="slug"
+                  v-model="mainData.slug"
+                  class="input"
+                  type="text"
+                  name="slug"
+                  placeholder=""
+                />
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field is-fullwidth">
               <label for="url" class="label">Page URL (absolute path)</label>
               <div class="control">
                 <input

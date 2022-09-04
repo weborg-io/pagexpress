@@ -23,6 +23,22 @@
           </div>
           <div class="column">
             <div class="field is-fullwidth">
+              <label for="slug" class="label">Page slug</label>
+              <div class="control">
+                <input
+                  id="slug"
+                  :value="mainData.slug"
+                  class="input"
+                  type="text"
+                  name="slug"
+                  placeholder=""
+                  @input="updateMainData('slug', $event.target.value)"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field is-fullwidth">
               <label for="url" class="label">Page URL (absolute path)</label>
               <div class="control">
                 <input
@@ -398,7 +414,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import Field from '@/components/Field';
 
 export default {

@@ -5,6 +5,7 @@ Joi.objectId = require('joi-objectid')(Joi);
 const GallerySchema = new Schema(
   {
     name: { type: String, require: true, max: 50 },
+    slug: { type: String, min: 3, unique: true, require: true },
     images: [{ type: Schema.Types.ObjectId, ref: 'Media' }],
   },
   {
@@ -14,6 +15,10 @@ const GallerySchema = new Schema(
 
 const galleryValidationSchema = Joi.object({
   name: Joi.string().required().max(50),
+  slug: Joi.string()
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+    .min(3)
+    .required(),
   images: Joi.array().items(Joi.objectId()),
 });
 

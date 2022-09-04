@@ -13,24 +13,24 @@
               :value="gallery._id"
               :selected="activeGallery && activeGallery._id === gallery._id"
             >
-              {{ gallery.name }}
+              {{ gallery.slug }}
             </option>
           </select>
         </div>
         <div class="field has-addons">
           <div class="control">
             <input
-              v-model="newGalleryName"
+              v-model="newGallerySlug"
               type="text"
               class="input"
-              placeholder="Gallery name"
+              placeholder="Gallery slug"
             />
           </div>
           <div class="control">
             <button
               class="button is-success"
-              :disabled="!newGalleryName.length"
-              @click="addGallery(newGalleryName)"
+              :disabled="!newGallerySlug.length"
+              @click="addGallery(newGallerySlug)"
             >
               <span>Add New</span>
             </button>
@@ -58,9 +58,9 @@
       <div class="w-full my-4 flex justify-between items-end">
         <div class="flex items-end gap-2">
           <FieldText
-            label="Gallery name"
+            label="Gallery slug"
             custom-class="mb-0"
-            :value="activeGallery.name"
+            :value="activeGallery.slug"
             @update="renameGallery"
           ></FieldText>
           <div class="field mb-0">
@@ -176,9 +176,9 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
 import { Container, Draggable } from 'vue-smooth-dnd';
-import { Toolbar, Modal } from '@/components';
+import { mapActions, mapState } from 'vuex';
+import { Modal, Toolbar } from '@/components';
 import FieldText from '@/components/FieldTypes/FieldText';
 
 const BULK_ACTIONS = {
@@ -198,7 +198,7 @@ export default {
     return {
       bulkActions: Object.values(BULK_ACTIONS),
       activeBulkAction: '',
-      newGalleryName: '',
+      newGallerySlug: '',
       markedItems: [],
       imagePreview: null,
       dropPlaceholderOptions: {

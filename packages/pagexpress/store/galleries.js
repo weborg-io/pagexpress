@@ -73,19 +73,19 @@ export const actions = {
     commit('LOAD_ACTIVE_GALLERY', gallery);
   },
 
-  async addGallery({ commit, dispatch }, name) {
+  async addGallery({ commit, dispatch }, slug) {
     const galleryId = await showRequestResult({
-      request: this.$axios.post('galleries/', { name }),
+      request: this.$axios.post('galleries/', { slug }),
       dispatch,
     });
 
-    commit('ADD_GALLERY', { _id: galleryId, name, images: [] });
+    commit('ADD_GALLERY', { _id: galleryId, slug, images: [] });
   },
 
   async saveGallery({ dispatch, state }) {
     await showRequestResult({
       request: this.$axios.put(`galleries/${state.activeGallery._id}`, {
-        name: state.activeGallery.name,
+        slug: state.activeGallery.slug,
         images: state.activeGallery.images.map(g => g._id),
       }),
       successMessage: 'Saved changes',
@@ -97,7 +97,7 @@ export const actions = {
 
   async removeGallery({ commit, dispatch, state }, callbackFn) {
     if (
-      !confirm(`Please, confirm removing "${state.activeGallery.name}" gallery`)
+      !confirm(`Please, confirm removing "${state.activeGallery.slug}" gallery`)
     ) {
       return;
     }
@@ -120,12 +120,12 @@ export const actions = {
     commit('DEACTIVATE_GALLERY');
   },
 
-  renameGallery({ commit, dispatch, state }, newName) {
-    if (state.activeGallery && state.activeGallery.name === newName) {
+  renameGallery({ commit, dispatch, state }, newSlug) {
+    if (state.activeGallery && state.activeGallery.slug === newSlug) {
       return;
     }
 
-    commit('UPDATE_GALLERY', { name: newName });
+    commit('UPDATE_GALLERY', { slug: newSlug });
     dispatch('setDirtyState', null, { root: true });
   },
 

@@ -9,7 +9,7 @@ const getPages = async (req, res, next) => {
   try {
     if (pageId) {
       const singlePage = await Page.findById(pageId)
-        .select('name url pageDetails type attributes')
+        .select('name slug url pageDetails type attributes')
         .populate({
           path: 'pageDetails',
           model: 'PageDetails',
@@ -18,7 +18,7 @@ const getPages = async (req, res, next) => {
         .exec();
 
       if (!singlePage) {
-        throw new NotFound('Page not exist');
+        next(new NotFound('Page not exist'));
       }
 
       const { type } = singlePage.toObject();
@@ -39,7 +39,14 @@ const getPages = async (req, res, next) => {
         data: singlePage,
       });
     } else {
-      const sortableFields = ['name', 'type', 'url', 'createdAt', 'updatedAt'];
+      const sortableFields = [
+        'name',
+        'slug',
+        'type',
+        'url',
+        'createdAt',
+        'updatedAt',
+      ];
       const listFeatures = new ListFeatures(Page, req.query, 'name');
       const { currentPage, itemsPerPage, limit, skip, totalPages } =
         await listFeatures.getPaginationParameters();
@@ -82,7 +89,7 @@ const createPage = async (req, res, next) => {
 
   try {
     if (error) {
-      throw new BadRequest(error.details[0].message);
+      next(new BadRequest(error.details[0].message));
     }
 
     const page = new Page(req.body);
@@ -99,7 +106,7 @@ const updatePage = async (req, res, next) => {
 
   try {
     if (error) {
-      throw new BadRequest(error.details[0].message);
+      next(new BadRequest(error.details[0].message));
     }
 
     const page = await Page.findOneAndUpdate({ _id: pageId }, req.body);
