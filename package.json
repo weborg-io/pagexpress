@@ -11,8 +11,5 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/weborg-io/pagexpress.git"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }
