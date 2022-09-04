@@ -1,6 +1,6 @@
 {
   "name": "@weborg-io/pagexpress-server",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "Open Source NodeJS headless CMS API server",
   "main": "run/index.js",
   "scripts": {
