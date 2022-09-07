@@ -81,7 +81,7 @@ class GalleryController {
     const { error } = galleryValidationSchema.validate(req.body);
 
     if (error) {
-      next(BadRequest(error.details[0].message));
+      next(new BadRequest(error.details[0].message));
 
       return;
     }
@@ -100,7 +100,7 @@ class GalleryController {
     const { error } = galleryValidationSchema.validate(req.body);
 
     if (error) {
-      next(BadRequest(error.details[0].message));
+      next(new BadRequest(error.details[0].message));
 
       return;
     }
